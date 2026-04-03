@@ -555,21 +555,18 @@
         .blog-empty h3 { font-size: 1.1rem; margin-bottom: 0.35rem; }
         .blog-empty p { color: var(--text-secondary); font-size: 0.88rem; }
 
-        /*
-        BLOG CARD — uncomment when adding posts:
-
         .blog-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 1.25rem; }
         .blog-card {
             background: var(--bg-card); border: 1px solid var(--border-light);
             border-radius: var(--radius); padding: 1.75rem;
-            transition: all var(--transition); display: block;
+            transition: all var(--transition); display: block; text-decoration: none;
         }
         .blog-card:hover { box-shadow: var(--shadow); transform: translateY(-3px); border-color: var(--border); }
         .blog-tag { font-family: var(--font-mono); font-size: 0.68rem; color: var(--teal); text-transform: uppercase; letter-spacing: 0.1em; margin-bottom: 0.6rem; display: block; }
         .blog-card h3 { font-size: 1.05rem; font-weight: 600; margin-bottom: 0.6rem; color: var(--text); line-height: 1.4; }
         .blog-card p { color: var(--text-secondary); font-size: 0.85rem; margin-bottom: 0.85rem; }
+        .blog-date { font-size: 0.75rem; color: var(--text-muted); }
         .read-more { font-size: 0.82rem; font-weight: 600; color: var(--accent); display: inline-flex; align-items: center; gap: 0.3rem; }
-        */
 
         /* ===== CONTACT ===== */
         .contact-grid {
@@ -1244,10 +1241,13 @@
                 <h2 class="section-title">Thoughts &amp; notes</h2>
                 <div class="divider"></div>
             </div>
-            <div class="blog-empty fade-in">
-                <i class="fas fa-pen-nib"></i>
-                <h3>Coming soon</h3>
-                <p>Posts on gravitational-wave physics, numerical methods, and grad school life will appear here.</p>
+            <div class="blog-grid">
+                <a href="blog/learning-to-review.html" class="blog-card fade-in">
+                    <span class="blog-tag">Grad Life</span>
+                    <h3>Learning to Review</h3>
+                    <p>Reflections on learning the art of peer review as a graduate student — what surprised me, what I got wrong, and what I wish I knew earlier.</p>
+                    <span class="blog-date">April 2026</span>
+                </a>
             </div>
         </div>
     </section>
