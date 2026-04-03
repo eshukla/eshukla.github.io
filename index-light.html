@@ -1,0 +1,1363 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Estuti Shukla — Numerical Relativity &amp; Deep Learning</title>
+    <meta name="description" content="Personal website of Estuti Shukla, PhD student at Penn State University researching numerical relativity, deep learning, and gravitational-wave physics.">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=DM+Sans:ital,opsz,wght@0,9..40,300;0,9..40,400;0,9..40,500;0,9..40,600;0,9..40,700&family=DM+Mono:wght@400;500&family=Instrument+Serif:ital@0;1&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+    <style>
+        *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+        :root {
+            --bg: #faf8f5;
+            --bg-warm: #f3efe9;
+            --bg-card: #ffffff;
+            --text: #1c2333;
+            --text-secondary: #4a5068;
+            --text-muted: #8890a4;
+            --accent: #b55a30;
+            --accent-light: #c96f3c;
+            --accent-soft: rgba(181, 90, 48, 0.08);
+            --accent-softer: rgba(181, 90, 48, 0.04);
+            --teal: #2a7c6e;
+            --teal-soft: rgba(42, 124, 110, 0.08);
+            --navy: #1c2333;
+            --border: #e2ddd5;
+            --border-light: #eeebe5;
+            --radius: 16px;
+            --radius-sm: 10px;
+            --shadow-sm: 0 1px 3px rgba(0,0,0,0.04);
+            --shadow: 0 4px 20px rgba(0,0,0,0.06);
+            --shadow-lg: 0 12px 40px rgba(0,0,0,0.08);
+            --font: 'DM Sans', -apple-system, sans-serif;
+            --font-mono: 'DM Mono', monospace;
+            --font-serif: 'Instrument Serif', Georgia, serif;
+            --max-width: 1100px;
+            --transition: 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+
+        html { scroll-behavior: smooth; }
+
+        body {
+            font-family: var(--font);
+            background: var(--bg);
+            color: var(--text);
+            line-height: 1.7;
+            font-size: 17px;
+            -webkit-font-smoothing: antialiased;
+            overflow-x: hidden;
+        }
+
+        ::selection { background: var(--accent); color: white; }
+
+        a { color: var(--accent-light); text-decoration: none; transition: color var(--transition); }
+        a:hover { color: var(--teal); }
+
+        /* ===== INTERACTIVE NEURAL NETWORK NAV ===== */
+        @keyframes spin-slow {
+            from { transform: rotate(0deg); }
+            to { transform: rotate(360deg); }
+        }
+
+        @keyframes glow-pulse {
+            0%, 100% { opacity: 0.15; }
+            50% { opacity: 0.25; }
+        }
+
+        @keyframes float-particle {
+            0%, 100% { opacity: 0.3; }
+            50% { opacity: 0.55; }
+        }
+
+        /* The interactive network container */
+        .nn-nav {
+            position: relative;
+            width: 620px;
+            height: 750px;
+            flex-shrink: 0;
+            overflow: visible;
+        }
+
+        .nn-nav svg {
+            width: 100%;
+            height: 100%;
+        }
+
+        /* Neural network connections */
+        .nn-connection {
+            transition: all 0.5s ease;
+            stroke-opacity: 0.12;
+        }
+
+        /* Node groups — interactive */
+        .nn-node-group {
+            cursor: pointer;
+        }
+
+        .nn-node-ring {
+            transition: fill-opacity 0.4s ease, stroke-opacity 0.4s ease;
+            fill-opacity: 0;
+            stroke-opacity: 0;
+        }
+
+        .nn-node-group:hover .nn-node-ring {
+            fill-opacity: 0.08;
+            stroke-opacity: 0.35;
+        }
+
+        .nn-node-circle {
+            transition: opacity 0.4s ease;
+        }
+
+        .nn-node-group:hover .nn-node-circle {
+            opacity: 1;
+        }
+
+        .nn-node-label {
+            font-family: 'DM Sans', sans-serif;
+            font-size: 13.5px;
+            font-weight: 600;
+            letter-spacing: 0.06em;
+            text-transform: uppercase;
+            fill: var(--text-secondary);
+            transition: fill 0.3s ease;
+            pointer-events: none;
+            dominant-baseline: middle;
+        }
+
+        .nn-node-group:hover .nn-node-label {
+            fill: var(--accent);
+        }
+
+        /* Connection highlight on node hover */
+        .nn-node-group:hover ~ .nn-connections .nn-connection,
+        .nn-node-group.active ~ .nn-connections .nn-connection {
+            stroke-opacity: 0.05;
+        }
+
+        /* Particle traveling along connections */
+        .nn-particle {
+            animation: float-particle 3s ease-in-out infinite;
+        }
+
+        .nn-particle-d1 { animation-delay: 0s; }
+        .nn-particle-d2 { animation-delay: 0.7s; }
+        .nn-particle-d3 { animation-delay: 1.4s; }
+        .nn-particle-d4 { animation-delay: 2.1s; }
+        .nn-particle-d5 { animation-delay: 0.35s; }
+        .nn-particle-d6 { animation-delay: 1.05s; }
+
+        /* Nav removed — neural network nodes serve as navigation */
+
+        /* ===== HERO ===== */
+        .hero {
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            position: relative;
+            z-index: 1;
+            overflow: hidden;
+        }
+
+        .hero-inner {
+            max-width: var(--max-width);
+            margin: 0 auto;
+            padding: 0 2rem;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 2rem;
+            width: 100%;
+        }
+
+        .hero-text {
+            flex: 1;
+            min-width: 0;
+        }
+
+        .hero-tag {
+            display: inline-flex;
+            align-items: center;
+            gap: 0.5rem;
+            font-family: var(--font-mono);
+            font-size: 0.75rem;
+            color: var(--teal);
+            background: var(--teal-soft);
+            padding: 0.35rem 0.9rem;
+            border-radius: 100px;
+            margin-bottom: 1.75rem;
+            letter-spacing: 0.04em;
+        }
+
+        .hero-tag .dot {
+            width: 5px; height: 5px;
+            background: var(--teal);
+            border-radius: 50%;
+            animation: blink 2.5s infinite;
+        }
+
+        @keyframes blink {
+            0%, 100% { opacity: 1; }
+            50% { opacity: 0.2; }
+        }
+
+        .hero h1 {
+            font-family: var(--font-serif);
+            font-size: clamp(2.6rem, 5vw, 3.8rem);
+            font-weight: 400;
+            line-height: 1.15;
+            letter-spacing: -1px;
+            margin-bottom: 1.5rem;
+            color: var(--text);
+        }
+
+        .hero h1 em {
+            color: var(--accent-light);
+            font-style: italic;
+        }
+
+        .hero-subtitle {
+            font-size: 1.1rem;
+            color: var(--text-secondary);
+            max-width: 460px;
+            line-height: 1.8;
+            margin-bottom: 2rem;
+            font-weight: 400;
+        }
+
+        .hero-links { display: flex; gap: 0.6rem; flex-wrap: wrap; }
+
+        .nn-hint {
+            margin-top: 0.75rem;
+            font-size: 0.75rem;
+            color: var(--text-muted);
+            font-family: var(--font-mono);
+            opacity: 0.6;
+            text-align: center;
+        }
+
+        .nn-hint i { margin-right: 0.3rem; }
+
+        .btn {
+            display: inline-flex;
+            align-items: center;
+            gap: 0.45rem;
+            padding: 0.6rem 1.3rem;
+            border-radius: 10px;
+            font-size: 0.85rem;
+            font-weight: 600;
+            transition: all var(--transition);
+            border: none;
+            cursor: pointer;
+            font-family: var(--font);
+        }
+
+        .btn-primary {
+            background: var(--accent);
+            color: white;
+        }
+
+        .btn-primary:hover {
+            background: var(--accent-light);
+            transform: translateY(-1px);
+            box-shadow: 0 4px 16px rgba(181, 90, 48, 0.2);
+            color: white;
+        }
+
+        .btn-ghost {
+            background: var(--bg-card);
+            color: var(--text-secondary);
+            border: 1px solid var(--border);
+        }
+
+        .btn-ghost:hover {
+            color: var(--accent);
+            border-color: var(--accent);
+            background: var(--accent-softer);
+        }
+
+        /* ===== SECTIONS ===== */
+        section { padding: 5.5rem 2rem; position: relative; z-index: 1; }
+
+        .section-inner { max-width: var(--max-width); margin: 0 auto; }
+
+        .section-header { margin-bottom: 2.75rem; }
+
+        .section-label {
+            font-family: var(--font-mono);
+            font-size: 0.78rem;
+            color: var(--teal);
+            text-transform: uppercase;
+            letter-spacing: 0.15em;
+            margin-bottom: 0.5rem;
+            display: block;
+        }
+
+        .section-title {
+            font-family: var(--font-serif);
+            font-size: clamp(2rem, 4.5vw, 2.8rem);
+            font-weight: 400;
+            letter-spacing: -0.5px;
+        }
+
+        .divider {
+            width: 40px; height: 2px;
+            background: var(--accent);
+            border-radius: 2px;
+            margin-top: 0.75rem;
+            opacity: 0.5;
+        }
+
+        /* ===== SECTION BACKGROUND ART ===== */
+        .section-art {
+            position: absolute;
+            pointer-events: none;
+            z-index: 0;
+        }
+
+        .section-inner, .section-header {
+            position: relative;
+            z-index: 1;
+        }
+
+        /* ===== ABOUT ===== */
+        .alt-bg { background: var(--bg-warm); }
+
+        .about-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 3.5rem;
+            align-items: start;
+        }
+
+        .about-text p {
+            color: var(--text-secondary);
+            margin-bottom: 1.15rem;
+            font-size: 1.02rem;
+        }
+
+        .about-text strong { color: var(--text); font-weight: 600; }
+
+        .info-cards { display: grid; gap: 0.75rem; }
+
+        .info-card {
+            background: var(--bg-card);
+            border: 1px solid var(--border-light);
+            border-radius: var(--radius-sm);
+            padding: 1rem 1.25rem;
+            display: flex;
+            align-items: center;
+            gap: 0.85rem;
+            transition: all var(--transition);
+        }
+
+        .info-card:hover {
+            border-color: var(--border);
+            box-shadow: var(--shadow-sm);
+            transform: translateX(3px);
+        }
+
+        .info-card .icon {
+            width: 36px; height: 36px;
+            display: flex; align-items: center; justify-content: center;
+            background: var(--accent-soft);
+            color: var(--accent);
+            border-radius: 8px;
+            font-size: 0.85rem;
+            flex-shrink: 0;
+        }
+
+        .info-card h4 {
+            font-size: 0.68rem;
+            color: var(--text-muted);
+            text-transform: uppercase;
+            letter-spacing: 0.1em;
+            font-weight: 500;
+            margin-bottom: 0.1rem;
+        }
+
+        .info-card p { font-size: 0.88rem; font-weight: 500; margin: 0; }
+
+        /* ===== RESEARCH ===== */
+        .research-areas {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 1.25rem;
+        }
+
+        .research-card {
+            background: var(--bg-card);
+            border: 1px solid var(--border-light);
+            border-radius: var(--radius);
+            padding: 1.75rem;
+            transition: all var(--transition);
+            position: relative;
+        }
+
+        .research-card:hover {
+            box-shadow: var(--shadow);
+            transform: translateY(-3px);
+            border-color: var(--border);
+        }
+
+        .research-card .card-icon {
+            font-size: 1.6rem;
+            margin-bottom: 0.85rem;
+            display: block;
+        }
+
+        .research-card h3 {
+            font-size: 1.1rem;
+            font-weight: 600;
+            margin-bottom: 0.6rem;
+            letter-spacing: -0.2px;
+        }
+
+        .research-card p {
+            color: var(--text-secondary);
+            font-size: 0.95rem;
+            line-height: 1.7;
+        }
+
+        /* ===== PUBLICATIONS ===== */
+        .pub-list { display: flex; flex-direction: column; gap: 1rem; }
+
+        .pub-item {
+            background: var(--bg-card);
+            border: 1px solid var(--border-light);
+            border-radius: var(--radius);
+            padding: 1.5rem 1.75rem;
+            transition: all var(--transition);
+        }
+
+        .pub-item:hover {
+            box-shadow: var(--shadow-sm);
+            border-color: var(--border);
+        }
+
+        .pub-year {
+            font-family: var(--font-mono);
+            font-size: 0.7rem;
+            color: var(--teal);
+            background: var(--teal-soft);
+            padding: 0.15rem 0.5rem;
+            border-radius: 4px;
+            display: inline-block;
+            margin-bottom: 0.6rem;
+        }
+
+        .pub-item h3 {
+            font-size: 1.05rem;
+            font-weight: 600;
+            margin-bottom: 0.4rem;
+            line-height: 1.5;
+        }
+
+        .pub-authors {
+            font-size: 0.9rem;
+            color: var(--text-secondary);
+            margin-bottom: 0.35rem;
+        }
+
+        .pub-authors .me {
+            color: var(--accent);
+            font-weight: 600;
+        }
+
+        .pub-journal {
+            font-size: 0.82rem;
+            color: var(--text-muted);
+            font-style: italic;
+        }
+
+        .pub-links {
+            display: flex; gap: 0.5rem;
+            margin-top: 0.7rem;
+        }
+
+        .pub-links a {
+            font-size: 0.75rem;
+            font-family: var(--font-mono);
+            color: var(--text-muted);
+            padding: 0.15rem 0.5rem;
+            border: 1px solid var(--border);
+            border-radius: 5px;
+            transition: all var(--transition);
+        }
+
+        .pub-links a:hover {
+            color: var(--accent);
+            border-color: var(--accent);
+            background: var(--accent-softer);
+        }
+
+        .pub-footer {
+            margin-top: 1.5rem;
+            color: var(--text-muted);
+            font-size: 0.85rem;
+        }
+
+        /* ===== CV / TIMELINE ===== */
+        .timeline { position: relative; padding-left: 2rem; }
+
+        .timeline::before {
+            content: '';
+            position: absolute;
+            left: 0; top: 0; bottom: 0;
+            width: 1.5px;
+            background: linear-gradient(to bottom, var(--accent), var(--navy), var(--border));
+            opacity: 0.4;
+        }
+
+        .tl-item { position: relative; margin-bottom: 2.25rem; }
+
+        .tl-item::before {
+            content: '';
+            position: absolute;
+            left: -2.15rem; top: 0.35rem;
+            width: 10px; height: 10px;
+            background: var(--bg);
+            border: 2px solid var(--accent);
+            border-radius: 50%;
+        }
+
+        .tl-date {
+            font-family: var(--font-mono);
+            font-size: 0.75rem;
+            color: var(--accent-light);
+            margin-bottom: 0.15rem;
+        }
+
+        .tl-item h3 { font-size: 1.05rem; font-weight: 600; margin-bottom: 0.1rem; }
+
+        .tl-org { color: var(--text-secondary); font-size: 0.95rem; margin-bottom: 0.35rem; }
+
+        .tl-desc { color: var(--text-muted); font-size: 0.92rem; }
+
+        .cv-download { margin-top: 2rem; }
+
+        .cv-note { margin-top: 0.5rem; color: var(--text-muted); font-size: 0.75rem; }
+
+        /* ===== BLOG ===== */
+        .blog-empty {
+            background: var(--bg-card);
+            border: 1px dashed var(--border);
+            border-radius: var(--radius);
+            padding: 3.5rem 2rem;
+            text-align: center;
+        }
+
+        .blog-empty i { font-size: 2rem; color: var(--text-muted); margin-bottom: 0.75rem; }
+        .blog-empty h3 { font-size: 1.1rem; margin-bottom: 0.35rem; }
+        .blog-empty p { color: var(--text-secondary); font-size: 0.88rem; }
+
+        /*
+        BLOG CARD — uncomment when adding posts:
+
+        .blog-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 1.25rem; }
+        .blog-card {
+            background: var(--bg-card); border: 1px solid var(--border-light);
+            border-radius: var(--radius); padding: 1.75rem;
+            transition: all var(--transition); display: block;
+        }
+        .blog-card:hover { box-shadow: var(--shadow); transform: translateY(-3px); border-color: var(--border); }
+        .blog-tag { font-family: var(--font-mono); font-size: 0.68rem; color: var(--teal); text-transform: uppercase; letter-spacing: 0.1em; margin-bottom: 0.6rem; display: block; }
+        .blog-card h3 { font-size: 1.05rem; font-weight: 600; margin-bottom: 0.6rem; color: var(--text); line-height: 1.4; }
+        .blog-card p { color: var(--text-secondary); font-size: 0.85rem; margin-bottom: 0.85rem; }
+        .read-more { font-size: 0.82rem; font-weight: 600; color: var(--accent); display: inline-flex; align-items: center; gap: 0.3rem; }
+        */
+
+        /* ===== CONTACT ===== */
+        .contact-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 3.5rem;
+        }
+
+        .contact-text p {
+            color: var(--text-secondary);
+            margin-bottom: 1.25rem;
+            font-size: 1.02rem;
+        }
+
+        .contact-links { display: flex; flex-direction: column; gap: 0.6rem; }
+
+        .contact-link-item {
+            display: flex; align-items: center; gap: 0.85rem;
+            padding: 0.85rem 1.1rem;
+            background: var(--bg-card);
+            border: 1px solid var(--border-light);
+            border-radius: var(--radius-sm);
+            transition: all var(--transition);
+        }
+
+        .contact-link-item:hover {
+            border-color: var(--border);
+            transform: translateX(3px);
+            box-shadow: var(--shadow-sm);
+            color: var(--text);
+        }
+
+        .contact-link-item i { color: var(--accent); width: 18px; text-align: center; font-size: 1rem; }
+        .contact-link-item span { font-size: 0.88rem; color: var(--text-secondary); }
+
+        .contact-office {
+            background: var(--bg-card);
+            border: 1px solid var(--border-light);
+            border-radius: var(--radius);
+            padding: 1.75rem;
+        }
+
+        .contact-office h3 { font-size: 1rem; font-weight: 600; margin-bottom: 0.75rem; }
+
+        .contact-office .address {
+            color: var(--text-secondary);
+            font-size: 0.9rem;
+            line-height: 1.9;
+        }
+
+        /* ===== FOOTER ===== */
+        footer {
+            padding: 1.75rem 2rem;
+            border-top: 1px solid var(--border-light);
+            position: relative; z-index: 1;
+        }
+
+        .footer-inner {
+            max-width: var(--max-width); margin: 0 auto;
+            display: flex; justify-content: space-between; align-items: center;
+        }
+
+        .footer-inner p { font-size: 0.75rem; color: var(--text-muted); }
+
+        .footer-socials { display: flex; gap: 0.85rem; }
+
+        .footer-socials a {
+            color: var(--text-muted); font-size: 0.95rem;
+            transition: color var(--transition);
+        }
+
+        .footer-socials a:hover { color: var(--accent); }
+
+        /* ===== FLOATING SIDE NAV ===== */
+        .side-nav {
+            position: fixed;
+            right: 1.5rem;
+            top: 50%;
+            transform: translateY(-50%);
+            z-index: 100;
+            display: flex;
+            flex-direction: column;
+            align-items: flex-end;
+            gap: 1.25rem;
+            opacity: 0;
+            pointer-events: none;
+            transition: opacity 0.5s ease;
+        }
+
+        .side-nav.visible {
+            opacity: 1;
+            pointer-events: auto;
+        }
+
+        .side-nav-item {
+            display: flex;
+            align-items: center;
+            gap: 0.6rem;
+            text-decoration: none;
+            flex-direction: row-reverse;
+        }
+
+        .side-nav-dot {
+            width: 11px;
+            height: 11px;
+            border-radius: 50%;
+            background: var(--border);
+            border: 2px solid var(--bg);
+            box-shadow: 0 0 0 1px var(--border);
+            transition: all 0.35s ease;
+            flex-shrink: 0;
+        }
+
+        .side-nav-item:hover .side-nav-dot,
+        .side-nav-item.active .side-nav-dot {
+            background: var(--accent);
+            box-shadow: 0 0 0 1px var(--accent);
+            transform: scale(1.3);
+        }
+
+        .side-nav-label {
+            font-family: var(--font-mono);
+            font-size: 0.68rem;
+            color: var(--text-muted);
+            text-transform: uppercase;
+            letter-spacing: 0.08em;
+            opacity: 0;
+            transform: translateX(6px);
+            transition: all 0.3s ease;
+            white-space: nowrap;
+        }
+
+        .side-nav-item:hover .side-nav-label {
+            opacity: 1;
+            transform: translateX(0);
+        }
+
+        .side-nav-item.active .side-nav-label {
+            opacity: 0.7;
+            transform: translateX(0);
+            color: var(--accent);
+        }
+
+        @media (max-width: 768px) {
+            .side-nav { display: none; }
+        }
+
+        /* ===== ANIMATIONS ===== */
+        .fade-in {
+            opacity: 0; transform: translateY(24px);
+            transition: all 0.6s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+
+        .fade-in.visible { opacity: 1; transform: translateY(0); }
+
+        /* ===== RESPONSIVE ===== */
+        @media (max-width: 900px) {
+            .hero-inner {
+                flex-direction: column;
+                text-align: left;
+                gap: 2rem;
+                padding-top: 5rem;
+            }
+            .nn-nav { width: 400px; height: 500px; margin: 0 auto; }
+            .nn-hint { display: none; }
+        }
+
+        @media (max-width: 768px) {
+            .about-grid, .contact-grid { grid-template-columns: 1fr; gap: 2rem; }
+            .research-areas { grid-template-columns: 1fr; }
+            section { padding: 4rem 1.25rem; }
+            .footer-inner { flex-direction: column; gap: 0.75rem; }
+            .nn-nav { width: 340px; height: 420px; }
+        }
+    </style>
+</head>
+<body>
+
+    <!-- ===== HERO ===== -->
+    <section class="hero" id="home">
+        <div class="hero-inner">
+            <!-- Left: Name & intro -->
+            <div class="hero-text">
+                <div class="hero-tag"><span class="dot"></span> PhD Student &middot; Penn State</div>
+                <h1>
+                    Estuti Shukla<br>
+                    <em>Numerical Relativity &amp; Deep Learning</em>
+                </h1>
+                <p class="hero-subtitle">
+                    Bridging numerical relativity and deep learning to decode the universe's most extreme events &mdash; using large-scale simulations of black hole mergers and neutron star collisions alongside neural networks for gravitational-wave detection, parameter estimation, and real-time signal analysis.
+                </p>
+                <div class="hero-links">
+                    <a href="https://github.com/" target="_blank" class="btn btn-ghost"><i class="fab fa-github"></i></a>
+                    <a href="https://x.com/e__shukla" target="_blank" class="btn btn-ghost"><i class="fab fa-x-twitter"></i></a>
+                    <a href="https://linkedin.com/" target="_blank" class="btn btn-ghost"><i class="fab fa-linkedin-in"></i></a>
+                    <a href="https://scholar.google.com/" target="_blank" class="btn btn-ghost"><i class="fas fa-graduation-cap"></i></a>
+                    <a href="mailto:eps5617@psu.edu" class="btn btn-ghost"><i class="fas fa-envelope"></i></a>
+                </div>
+            </div>
+
+            <!-- Right: Interactive Neural Network + Black Hole -->
+            <div style="display:flex; flex-direction:column; align-items:center;">
+            <div class="nn-nav" id="nnNav">
+                <!-- Canvas for Gargantua black hole -->
+                <img src="blackhole.png" alt="Black hole illustration" style="position:absolute; top:50%; left:36%; transform:translate(-50%,-50%); width:400px; height:auto; pointer-events:none; opacity:0.9;">
+                <svg viewBox="0 0 760 700" fill="none" xmlns="http://www.w3.org/2000/svg" style="position:relative; z-index:1;">
+                    <defs>
+                        <filter id="nodeGlow" x="-100%" y="-100%" width="300%" height="300%">
+                            <feGaussianBlur in="SourceGraphic" stdDeviation="5"/>
+                        </filter>
+                        <filter id="bhBlur">
+                            <feGaussianBlur in="SourceGraphic" stdDeviation="3"/>
+                        </filter>
+                    </defs>
+                    <circle cx="18" cy="110" r="4.5" fill="#1c2333" opacity="0.3" class="nn-particle nn-particle-d1"/>
+                    <circle cx="18" cy="230" r="4.5" fill="#1c2333" opacity="0.3" class="nn-particle nn-particle-d3"/>
+                    <circle cx="18" cy="350" r="4.5" fill="#1c2333" opacity="0.3" class="nn-particle nn-particle-d5"/>
+                    <circle cx="18" cy="470" r="4.5" fill="#1c2333" opacity="0.3" class="nn-particle nn-particle-d2"/>
+                    <circle cx="18" cy="590" r="4.5" fill="#1c2333" opacity="0.3" class="nn-particle nn-particle-d4"/>
+                    <circle cx="95" cy="170" r="5.5" fill="#b55a30" opacity="0.35" class="nn-particle nn-particle-d2"/>
+                    <circle cx="95" cy="310" r="5.5" fill="#b55a30" opacity="0.35" class="nn-particle nn-particle-d4"/>
+                    <circle cx="95" cy="450" r="5.5" fill="#b55a30" opacity="0.35" class="nn-particle nn-particle-d6"/>
+                    <circle cx="95" cy="560" r="5.5" fill="#b55a30" opacity="0.35" class="nn-particle nn-particle-d1"/>
+                    <circle cx="170" cy="230" r="6" fill="#2a7c6e" opacity="0.35" class="nn-particle nn-particle-d5"/>
+                    <circle cx="170" cy="380" r="6" fill="#2a7c6e" opacity="0.35" class="nn-particle nn-particle-d3"/>
+                    <circle cx="170" cy="510" r="6" fill="#2a7c6e" opacity="0.35" class="nn-particle nn-particle-d1"/>
+                    <line x1="23" y1="110" x2="89" y2="170" stroke="#1c2333" stroke-width="0.7" opacity="0.12"/>
+                    <line x1="23" y1="110" x2="89" y2="310" stroke="#1c2333" stroke-width="0.4" opacity="0.06"/>
+                    <line x1="23" y1="230" x2="89" y2="170" stroke="#1c2333" stroke-width="0.4" opacity="0.06"/>
+                    <line x1="23" y1="230" x2="89" y2="310" stroke="#1c2333" stroke-width="0.7" opacity="0.12"/>
+                    <line x1="23" y1="350" x2="89" y2="310" stroke="#1c2333" stroke-width="0.7" opacity="0.12"/>
+                    <line x1="23" y1="350" x2="89" y2="450" stroke="#1c2333" stroke-width="0.5" opacity="0.08"/>
+                    <line x1="23" y1="470" x2="89" y2="450" stroke="#1c2333" stroke-width="0.7" opacity="0.12"/>
+                    <line x1="23" y1="470" x2="89" y2="560" stroke="#1c2333" stroke-width="0.5" opacity="0.08"/>
+                    <line x1="23" y1="590" x2="89" y2="560" stroke="#1c2333" stroke-width="0.7" opacity="0.12"/>
+                    <line x1="23" y1="590" x2="89" y2="450" stroke="#1c2333" stroke-width="0.4" opacity="0.06"/>
+                    <line x1="101" y1="170" x2="164" y2="230" stroke="#b55a30" stroke-width="0.8" opacity="0.15"/>
+                    <line x1="101" y1="170" x2="164" y2="380" stroke="#b55a30" stroke-width="0.4" opacity="0.06"/>
+                    <line x1="101" y1="310" x2="164" y2="230" stroke="#b55a30" stroke-width="0.5" opacity="0.08"/>
+                    <line x1="101" y1="310" x2="164" y2="380" stroke="#b55a30" stroke-width="0.8" opacity="0.15"/>
+                    <line x1="101" y1="450" x2="164" y2="380" stroke="#b55a30" stroke-width="0.7" opacity="0.12"/>
+                    <line x1="101" y1="450" x2="164" y2="510" stroke="#b55a30" stroke-width="0.8" opacity="0.15"/>
+                    <line x1="101" y1="560" x2="164" y2="510" stroke="#b55a30" stroke-width="0.8" opacity="0.15"/>
+                    <line x1="176" y1="230" x2="210" y2="330" stroke="#2a7c6e" stroke-width="1" opacity="0.18"/>
+                    <line x1="176" y1="380" x2="210" y2="345" stroke="#2a7c6e" stroke-width="1" opacity="0.18"/>
+                    <line x1="176" y1="510" x2="210" y2="360" stroke="#2a7c6e" stroke-width="1" opacity="0.18"/>
+                    <line x1="280" y1="320" x2="518" y2="68"  stroke="#b55a30" stroke-width="1" class="nn-connection" data-node="about"/>
+                    <line x1="280" y1="330" x2="518" y2="183" stroke="#b55a30" stroke-width="1" class="nn-connection" data-node="research"/>
+                    <line x1="280" y1="340" x2="518" y2="297" stroke="#b55a30" stroke-width="1" class="nn-connection" data-node="publications"/>
+                    <line x1="280" y1="350" x2="518" y2="411" stroke="#b55a30" stroke-width="1" class="nn-connection" data-node="cv"/>
+                    <line x1="280" y1="360" x2="518" y2="526" stroke="#b55a30" stroke-width="1" class="nn-connection" data-node="blog"/>
+                    <line x1="280" y1="370" x2="518" y2="640" stroke="#b55a30" stroke-width="1" class="nn-connection" data-node="contact"/>
+                    <line x1="530" y1="68"  x2="530" y2="640" stroke="#b55a30" stroke-width="0.4" opacity="0.06"/>
+                    <circle cx="55" cy="200" r="2" fill="#1c2333" opacity="0.3" class="nn-particle nn-particle-d1"/>
+                    <circle cx="130" cy="310" r="2" fill="#b55a30" opacity="0.3" class="nn-particle nn-particle-d3"/>
+                    <circle cx="205" cy="350" r="2" fill="#2a7c6e" opacity="0.3" class="nn-particle nn-particle-d5"/>
+                    <circle cx="375" cy="220" r="2" fill="#1c2333" opacity="0.25" class="nn-particle nn-particle-d2"/>
+                    <circle cx="365" cy="460" r="2" fill="#2a7c6e" opacity="0.25" class="nn-particle nn-particle-d4"/>
+                    <circle cx="55" cy="500" r="2" fill="#b55a30" opacity="0.25" class="nn-particle nn-particle-d6"/>
+                    <a href="#about" class="nn-node-group" data-section="about">
+                        <circle cx="530" cy="68" r="34" class="nn-node-ring" fill="#b55a30" stroke="#b55a30" stroke-width="1"/>
+                        <circle cx="530" cy="68" r="17" fill="#b55a30" opacity="0.8" class="nn-node-circle"/>
+                        <circle cx="530" cy="68" r="7" fill="white" opacity="0.85"/>
+                        <text x="573" y="72" class="nn-node-label">About</text>
+                    </a>
+                    <a href="#research" class="nn-node-group" data-section="research">
+                        <circle cx="530" cy="183" r="34" class="nn-node-ring" fill="#b55a30" stroke="#b55a30" stroke-width="1"/>
+                        <circle cx="530" cy="183" r="17" fill="#b55a30" opacity="0.8" class="nn-node-circle"/>
+                        <circle cx="530" cy="183" r="7" fill="white" opacity="0.85"/>
+                        <text x="573" y="187" class="nn-node-label">Research</text>
+                    </a>
+                    <a href="#publications" class="nn-node-group" data-section="publications">
+                        <circle cx="530" cy="297" r="34" class="nn-node-ring" fill="#b55a30" stroke="#b55a30" stroke-width="1"/>
+                        <circle cx="530" cy="297" r="17" fill="#b55a30" opacity="0.8" class="nn-node-circle"/>
+                        <circle cx="530" cy="297" r="7" fill="white" opacity="0.85"/>
+                        <text x="573" y="301" class="nn-node-label">Publications</text>
+                    </a>
+                    <a href="#cv" class="nn-node-group" data-section="cv">
+                        <circle cx="530" cy="411" r="34" class="nn-node-ring" fill="#b55a30" stroke="#b55a30" stroke-width="1"/>
+                        <circle cx="530" cy="411" r="17" fill="#b55a30" opacity="0.8" class="nn-node-circle"/>
+                        <circle cx="530" cy="411" r="7" fill="white" opacity="0.85"/>
+                        <text x="573" y="415" class="nn-node-label">CV</text>
+                    </a>
+                    <a href="#blog" class="nn-node-group" data-section="blog">
+                        <circle cx="530" cy="526" r="34" class="nn-node-ring" fill="#b55a30" stroke="#b55a30" stroke-width="1"/>
+                        <circle cx="530" cy="526" r="17" fill="#b55a30" opacity="0.8" class="nn-node-circle"/>
+                        <circle cx="530" cy="526" r="7" fill="white" opacity="0.85"/>
+                        <text x="573" y="530" class="nn-node-label">Blog</text>
+                    </a>
+                    <a href="#contact" class="nn-node-group" data-section="contact">
+                        <circle cx="530" cy="640" r="34" class="nn-node-ring" fill="#b55a30" stroke="#b55a30" stroke-width="1"/>
+                        <circle cx="530" cy="640" r="17" fill="#b55a30" opacity="0.8" class="nn-node-circle"/>
+                        <circle cx="530" cy="640" r="7" fill="white" opacity="0.85"/>
+                        <text x="573" y="644" class="nn-node-label">Contact</text>
+                    </a>
+                </svg>
+            </div>
+            <p class="nn-hint"><i class="fas fa-mouse-pointer"></i> Click a node to navigate</p>
+            </div>
+        </div>
+    </section>
+
+    <!-- ===== ABOUT ===== -->
+    <section id="about" class="alt-bg" style="position:relative; overflow:hidden;">
+        <!-- Spacetime curvature / geodesic lines -->
+        <svg class="section-art" style="top:-60px; right:-80px; width:500px; height:500px; opacity:0.04;" viewBox="0 0 500 500" fill="none">
+            <path d="M0 250 Q125 200 250 250 Q375 300 500 250" stroke="#1c2333" stroke-width="1.5" fill="none"/>
+            <path d="M0 280 Q125 230 250 280 Q375 330 500 280" stroke="#1c2333" stroke-width="1.2" fill="none"/>
+            <path d="M0 310 Q125 260 250 310 Q375 360 500 310" stroke="#2a7c6e" stroke-width="1" fill="none"/>
+            <path d="M0 220 Q125 170 250 220 Q375 270 500 220" stroke="#2a7c6e" stroke-width="1" fill="none"/>
+            <path d="M0 190 Q125 140 250 190 Q375 240 500 190" stroke="#1c2333" stroke-width="0.8" fill="none"/>
+            <path d="M0 340 Q125 290 250 340 Q375 390 500 340" stroke="#1c2333" stroke-width="0.8" fill="none"/>
+            <!-- Vertical geodesics bending around center -->
+            <path d="M250 0 Q230 125 250 250 Q270 375 250 500" stroke="#b55a30" stroke-width="1" fill="none"/>
+            <path d="M200 0 Q160 125 200 250 Q240 375 200 500" stroke="#b55a30" stroke-width="0.8" fill="none"/>
+            <path d="M300 0 Q340 125 300 250 Q260 375 300 500" stroke="#b55a30" stroke-width="0.8" fill="none"/>
+            <circle cx="250" cy="250" r="20" fill="#1c2333" opacity="0.15"/>
+            <circle cx="250" cy="250" r="35" stroke="#1c2333" stroke-width="0.8" fill="none" opacity="0.2"/>
+        </svg>
+        <div class="section-inner">
+            <div class="section-header fade-in">
+                <span class="section-label">01 &mdash; About</span>
+                <h2 class="section-title">A bit about me</h2>
+                <div class="divider"></div>
+            </div>
+            <div class="about-grid">
+                <div class="about-text fade-in">
+                    <p>
+                        I am a PhD student in the <strong>Department of Physics</strong> at <strong>Penn State University</strong>, working with the <a href="https://sites.psu.edu/numrel/" target="_blank">Numerical Relativity group (NumRel@PSU)</a>. My research sits at the intersection of gravitational physics, numerical relativity, and relativistic astrophysics.
+                    </p>
+                    <p>
+                        I study some of the most extreme phenomena in the universe &mdash; from the nonlinear dynamics of black hole mergers to the physics connecting binary neutron star collisions with gamma-ray bursts. I use large-scale numerical simulations to probe the fundamental nature of gravity in the strong-field regime.
+                    </p>
+                    <p>
+                        Before Penn State, I completed my <strong>BS-MS dual degree in Physics</strong> from <strong>IISER Kolkata</strong> (2021) and spent time as a visiting researcher at <strong>ICTS-TIFR</strong>, Bengaluru, working on dynamical horizons of black holes under Dr. Prayush Kumar.
+                    </p>
+                </div>
+                <div class="about-photo fade-in" style="display:flex; align-items:center; justify-content:center;">
+                    <img src="profile.jpg" alt="Estuti Shukla" style="width:100%; max-width:380px; border-radius:var(--radius); object-fit:cover; border:3px solid var(--border-light); box-shadow:var(--shadow);">
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- ===== RESEARCH ===== -->
+    <section id="research" style="position:relative; overflow:hidden;">
+        <!-- Binary inspiral orbit + waveform snippet -->
+        <svg class="section-art" style="bottom:-40px; left:-60px; width:450px; height:450px; opacity:0.035;" viewBox="0 0 450 450" fill="none">
+            <!-- Inspiral orbit -->
+            <path d="M225 225 m0 -160 a160 160 0 0 1 0 320 a140 140 0 0 1 0 -280 a120 120 0 0 1 0 240 a100 100 0 0 1 0 -200 a80 80 0 0 1 0 160 a60 60 0 0 1 0 -120 a40 40 0 0 1 0 80 a20 20 0 0 1 0 -40" stroke="#1c2333" stroke-width="1.5" fill="none"/>
+            <!-- Binary masses -->
+            <circle cx="225" cy="225" r="8" fill="#1a1a2e" opacity="0.5"/>
+            <circle cx="225" cy="225" r="4" fill="#1c2333" opacity="0.4"/>
+            <!-- Chirp waveform below -->
+            <path d="M30 400 Q60 390 80 400 Q100 410 120 400 Q135 392 148 400 Q158 407 166 400 Q172 394 177 400 Q181 405 185 400 Q188 396 191 400" stroke="#2a7c6e" stroke-width="1.5" fill="none" stroke-linecap="round"/>
+            <path d="M260 400 Q263 396 266 400 Q270 405 274 400 Q279 394 284 400 Q292 407 302 400 Q315 392 330 400 Q350 410 370 400 Q390 390 420 400" stroke="#2a7c6e" stroke-width="1.5" fill="none" stroke-linecap="round"/>
+        </svg>
+        <!-- Small network fragment top-right -->
+        <svg class="section-art" style="top:-20px; right:-40px; width:300px; height:300px; opacity:0.03;" viewBox="0 0 300 300" fill="none">
+            <circle cx="40" cy="80" r="4" fill="#1c2333"/>
+            <circle cx="40" cy="160" r="4" fill="#1c2333"/>
+            <circle cx="40" cy="240" r="4" fill="#1c2333"/>
+            <circle cx="150" cy="120" r="5" fill="#b55a30"/>
+            <circle cx="150" cy="200" r="5" fill="#b55a30"/>
+            <circle cx="260" cy="160" r="6" fill="#2a7c6e"/>
+            <line x1="44" y1="80" x2="145" y2="120" stroke="#1c2333" stroke-width="0.8"/>
+            <line x1="44" y1="80" x2="145" y2="200" stroke="#1c2333" stroke-width="0.5"/>
+            <line x1="44" y1="160" x2="145" y2="120" stroke="#1c2333" stroke-width="0.5"/>
+            <line x1="44" y1="160" x2="145" y2="200" stroke="#1c2333" stroke-width="0.8"/>
+            <line x1="44" y1="240" x2="145" y2="200" stroke="#1c2333" stroke-width="0.8"/>
+            <line x1="155" y1="120" x2="254" y2="160" stroke="#2a7c6e" stroke-width="1"/>
+            <line x1="155" y1="200" x2="254" y2="160" stroke="#2a7c6e" stroke-width="1"/>
+        </svg>
+        <div class="section-inner">
+            <div class="section-header fade-in">
+                <span class="section-label">02 &mdash; Research</span>
+                <h2 class="section-title">What I work on</h2>
+                <div class="divider"></div>
+            </div>
+            <div class="research-areas">
+                <div class="research-card fade-in">
+                    <span class="card-icon">&#127752;</span>
+                    <h3>Black Hole Ringdown &amp; Nonlinear GR</h3>
+                    <p>Investigating nonlinear effects in the ringdown phase of gravitational waveforms from black hole mergers &mdash; signatures critical for precision gravitational-wave astronomy.</p>
+                </div>
+                <div class="research-card fade-in">
+                    <span class="card-icon">&#128165;</span>
+                    <h3>Binary Neutron Star Mergers &amp; GRBs</h3>
+                    <p>Connecting the nuclear physics of neutron stars to observable electromagnetic counterparts, and understanding how merger remnant fate determines gamma-ray burst properties.</p>
+                </div>
+                <div class="research-card fade-in">
+                    <span class="card-icon">&#9899;</span>
+                    <h3>Dynamical Horizons &amp; Black Hole Physics</h3>
+                    <p>Characterizing how black hole boundaries evolve during highly dynamic spacetime events like binary coalescence through numerical relativity simulations.</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- ===== PUBLICATIONS ===== -->
+    <section id="publications" class="alt-bg" style="position:relative; overflow:hidden;">
+        <!-- Scattered data points + regression / loss curve -->
+        <svg class="section-art" style="top:30px; right:-50px; width:400px; height:350px; opacity:0.035;" viewBox="0 0 400 350" fill="none">
+            <!-- Scattered data points -->
+            <circle cx="40" cy="280" r="3" fill="#1c2333"/>
+            <circle cx="70" cy="260" r="2.5" fill="#1c2333"/>
+            <circle cx="95" cy="230" r="3" fill="#b55a30"/>
+            <circle cx="130" cy="210" r="2.5" fill="#1c2333"/>
+            <circle cx="160" cy="185" r="3" fill="#2a7c6e"/>
+            <circle cx="190" cy="170" r="2.5" fill="#1c2333"/>
+            <circle cx="220" cy="145" r="3" fill="#b55a30"/>
+            <circle cx="255" cy="125" r="2.5" fill="#2a7c6e"/>
+            <circle cx="285" cy="105" r="3" fill="#1c2333"/>
+            <circle cx="320" cy="85" r="2.5" fill="#1c2333"/>
+            <circle cx="355" cy="70" r="3" fill="#b55a30"/>
+            <!-- Fit curve -->
+            <path d="M30 290 Q100 240 160 190 Q220 145 280 110 Q340 80 370 65" stroke="#2a7c6e" stroke-width="1.5" fill="none" stroke-dasharray="4 3"/>
+            <!-- Axes -->
+            <line x1="25" y1="30" x2="25" y2="310" stroke="#1c2333" stroke-width="1" opacity="0.3"/>
+            <line x1="25" y1="310" x2="380" y2="310" stroke="#1c2333" stroke-width="1" opacity="0.3"/>
+            <!-- Axis ticks -->
+            <line x1="20" y1="100" x2="25" y2="100" stroke="#1c2333" stroke-width="0.8" opacity="0.3"/>
+            <line x1="20" y1="200" x2="25" y2="200" stroke="#1c2333" stroke-width="0.8" opacity="0.3"/>
+            <line x1="150" y1="310" x2="150" y2="315" stroke="#1c2333" stroke-width="0.8" opacity="0.3"/>
+            <line x1="275" y1="310" x2="275" y2="315" stroke="#1c2333" stroke-width="0.8" opacity="0.3"/>
+        </svg>
+        <div class="section-inner">
+            <div class="section-header fade-in">
+                <span class="section-label">03 &mdash; Publications</span>
+                <h2 class="section-title">Publications</h2>
+                <div class="divider"></div>
+            </div>
+            <div class="pub-list" id="pubList">
+                <p style="color:var(--text-muted); text-align:center; padding:2rem;">Loading publications from INSPIRE-HEP...</p>
+            </div>
+            <p class="pub-footer">
+                Auto-updated from <a href="https://inspirehep.net/authors/2857221" target="_blank">INSPIRE-HEP</a>.
+                Also see
+                <a href="https://ui.adsabs.harvard.edu/search/q=author%3A%22Shukla%2C+Estuti%22&sort=date+desc" target="_blank">NASA ADS</a> or
+                <a href="https://arxiv.org/search/?query=Estuti+Shukla&searchtype=author" target="_blank">arXiv</a>.
+            </p>
+        </div>
+    </section>
+
+    <!-- ===== CV ===== -->
+    <section id="cv" style="position:relative; overflow:hidden;">
+        <!-- Orbital mechanics / Kepler orbit traces -->
+        <svg class="section-art" style="bottom:-80px; right:-100px; width:500px; height:500px; opacity:0.03;" viewBox="0 0 500 500" fill="none">
+            <ellipse cx="250" cy="250" rx="220" ry="140" stroke="#1c2333" stroke-width="1" transform="rotate(-25 250 250)"/>
+            <ellipse cx="250" cy="250" rx="180" ry="110" stroke="#b55a30" stroke-width="1" transform="rotate(-25 250 250)"/>
+            <ellipse cx="250" cy="250" rx="130" ry="75" stroke="#2a7c6e" stroke-width="1.2" transform="rotate(-25 250 250)"/>
+            <ellipse cx="250" cy="250" rx="70" ry="38" stroke="#1c2333" stroke-width="1.2" transform="rotate(-25 250 250)"/>
+            <!-- Central mass -->
+            <circle cx="250" cy="250" r="10" fill="#1c2333" opacity="0.2"/>
+            <!-- Orbiting bodies -->
+            <circle cx="470" cy="210" r="4" fill="#2a7c6e" opacity="0.3"/>
+            <circle cx="380" cy="175" r="3" fill="#b55a30" opacity="0.3"/>
+            <circle cx="320" cy="218" r="3.5" fill="#1c2333" opacity="0.3"/>
+        </svg>
+        <div class="section-inner">
+            <div class="section-header fade-in">
+                <span class="section-label">04 &mdash; Curriculum Vitae</span>
+                <h2 class="section-title">Education &amp; experience</h2>
+                <div class="divider"></div>
+            </div>
+            <div class="timeline fade-in">
+                <div class="tl-item">
+                    <div class="tl-date">2021 &mdash; Present</div>
+                    <h3>PhD in Physics</h3>
+                    <div class="tl-org">Penn State University &middot; Department of Physics</div>
+                    <div class="tl-desc">Numerical relativity and gravitational-wave physics with NumRel@PSU. TA for PHYS 212.</div>
+                </div>
+                <div class="tl-item">
+                    <div class="tl-date">2020 &mdash; 2021</div>
+                    <h3>Visiting Student Researcher</h3>
+                    <div class="tl-org">ICTS-TIFR, Bengaluru</div>
+                    <div class="tl-desc">Dynamical horizons of black holes using numerical relativity, supervised by Dr. Prayush Kumar.</div>
+                </div>
+                <div class="tl-item">
+                    <div class="tl-date">2016 &mdash; 2021</div>
+                    <h3>BS-MS Dual Degree in Physics</h3>
+                    <div class="tl-org">IISER Kolkata</div>
+                    <div class="tl-desc">Integrated five-year program with thesis research in gravitational physics.</div>
+                </div>
+            </div>
+            <div class="cv-download fade-in">
+                <a href="#" class="btn btn-primary"><i class="fas fa-download"></i> Download Full CV</a>
+                <p class="cv-note">Upload your CV as cv.pdf in the root of your GitHub repo and update this link.</p>
+            </div>
+        </div>
+    </section>
+
+    <!-- ===== BLOG ===== -->
+    <section id="blog" class="alt-bg" style="position:relative; overflow:hidden;">
+        <!-- Small constellation / knowledge graph -->
+        <svg class="section-art" style="top:-30px; left:-50px; width:350px; height:350px; opacity:0.03;" viewBox="0 0 350 350" fill="none">
+            <!-- Nodes -->
+            <circle cx="70" cy="90" r="4" fill="#1c2333"/>
+            <circle cx="175" cy="50" r="5" fill="#b55a30"/>
+            <circle cx="280" cy="100" r="4" fill="#2a7c6e"/>
+            <circle cx="120" cy="190" r="5" fill="#2a7c6e"/>
+            <circle cx="240" cy="200" r="4" fill="#1c2333"/>
+            <circle cx="60" cy="290" r="4" fill="#b55a30"/>
+            <circle cx="180" cy="310" r="5" fill="#1c2333"/>
+            <circle cx="300" cy="280" r="4" fill="#2a7c6e"/>
+            <!-- Edges -->
+            <line x1="70" y1="90" x2="175" y2="50" stroke="#1c2333" stroke-width="0.8"/>
+            <line x1="175" y1="50" x2="280" y2="100" stroke="#b55a30" stroke-width="0.8"/>
+            <line x1="70" y1="90" x2="120" y2="190" stroke="#1c2333" stroke-width="0.8"/>
+            <line x1="175" y1="50" x2="240" y2="200" stroke="#b55a30" stroke-width="0.6"/>
+            <line x1="280" y1="100" x2="240" y2="200" stroke="#2a7c6e" stroke-width="0.8"/>
+            <line x1="120" y1="190" x2="240" y2="200" stroke="#2a7c6e" stroke-width="0.8"/>
+            <line x1="120" y1="190" x2="60" y2="290" stroke="#1c2333" stroke-width="0.6"/>
+            <line x1="120" y1="190" x2="180" y2="310" stroke="#2a7c6e" stroke-width="0.8"/>
+            <line x1="240" y1="200" x2="300" y2="280" stroke="#1c2333" stroke-width="0.8"/>
+            <line x1="180" y1="310" x2="300" y2="280" stroke="#b55a30" stroke-width="0.6"/>
+            <line x1="60" y1="290" x2="180" y2="310" stroke="#1c2333" stroke-width="0.8"/>
+        </svg>
+        <div class="section-inner">
+            <div class="section-header fade-in">
+                <span class="section-label">05 &mdash; Blog</span>
+                <h2 class="section-title">Thoughts &amp; notes</h2>
+                <div class="divider"></div>
+            </div>
+            <div class="blog-empty fade-in">
+                <i class="fas fa-pen-nib"></i>
+                <h3>Coming soon</h3>
+                <p>Posts on gravitational-wave physics, numerical methods, and grad school life will appear here.</p>
+            </div>
+        </div>
+    </section>
+
+    <!-- ===== CONTACT ===== -->
+    <section id="contact" style="position:relative; overflow:hidden;">
+        <!-- Gravitational wave ripples expanding outward (communication metaphor) -->
+        <svg class="section-art" style="bottom:-100px; left:50%; transform:translateX(-50%); width:700px; height:350px; opacity:0.025;" viewBox="0 0 700 350" fill="none">
+            <ellipse cx="350" cy="350" rx="80" ry="80" stroke="#1c2333" stroke-width="1.2"/>
+            <ellipse cx="350" cy="350" rx="130" ry="130" stroke="#b55a30" stroke-width="1"/>
+            <ellipse cx="350" cy="350" rx="190" ry="190" stroke="#2a7c6e" stroke-width="0.9"/>
+            <ellipse cx="350" cy="350" rx="255" ry="255" stroke="#1c2333" stroke-width="0.8"/>
+            <ellipse cx="350" cy="350" rx="325" ry="325" stroke="#b55a30" stroke-width="0.7"/>
+            <!-- Source point -->
+            <circle cx="350" cy="350" r="6" fill="#1c2333" opacity="0.25"/>
+        </svg>
+        <div class="section-inner">
+            <div class="section-header fade-in">
+                <span class="section-label">06 &mdash; Contact</span>
+                <h2 class="section-title">Get in touch</h2>
+                <div class="divider"></div>
+            </div>
+            <div class="contact-grid">
+                <div class="contact-text fade-in">
+                    <p>
+                        Happy to chat about gravitational-wave physics, numerical relativity, potential collaborations, or anything else.
+                    </p>
+                    <div class="contact-links">
+                        <a href="mailto:eps5617@psu.edu" class="contact-link-item">
+                            <i class="fas fa-envelope"></i><span>eps5617@psu.edu</span>
+                        </a>
+                        <a href="https://x.com/e__shukla" target="_blank" class="contact-link-item">
+                            <i class="fab fa-x-twitter"></i><span>@e__shukla</span>
+                        </a>
+                        <a href="https://github.com/" target="_blank" class="contact-link-item">
+                            <i class="fab fa-github"></i><span>GitHub</span>
+                        </a>
+                        <a href="https://scholar.google.com/" target="_blank" class="contact-link-item">
+                            <i class="fas fa-graduation-cap"></i><span>Google Scholar</span>
+                        </a>
+                    </div>
+                </div>
+                <div class="contact-office fade-in">
+                    <h3><i class="fas fa-map-marker-alt" style="color: var(--accent); margin-right: 0.4rem;"></i> Office</h3>
+                    <div class="address">
+                        <p>104 Davey Lab, Box #C77</p>
+                        <p>Department of Physics</p>
+                        <p>Penn State University</p>
+                        <p>University Park, PA 16802</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- ===== FLOATING SIDE NAV ===== -->
+    <nav class="side-nav" id="sideNav">
+        <a href="#about" class="side-nav-item" data-section="about">
+            <span class="side-nav-label">About</span>
+            <span class="side-nav-dot"></span>
+        </a>
+        <a href="#research" class="side-nav-item" data-section="research">
+            <span class="side-nav-label">Research</span>
+            <span class="side-nav-dot"></span>
+        </a>
+        <a href="#publications" class="side-nav-item" data-section="publications">
+            <span class="side-nav-label">Papers</span>
+            <span class="side-nav-dot"></span>
+        </a>
+        <a href="#cv" class="side-nav-item" data-section="cv">
+            <span class="side-nav-label">CV</span>
+            <span class="side-nav-dot"></span>
+        </a>
+        <a href="#blog" class="side-nav-item" data-section="blog">
+            <span class="side-nav-label">Blog</span>
+            <span class="side-nav-dot"></span>
+        </a>
+        <a href="#contact" class="side-nav-item" data-section="contact">
+            <span class="side-nav-label">Contact</span>
+            <span class="side-nav-dot"></span>
+        </a>
+    </nav>
+
+    <!-- ===== FOOTER ===== -->
+    <footer>
+        <div class="footer-inner">
+            <p>&copy; 2026 Estuti Shukla &middot; Black hole illustration: ID <a href="https://www.dreamstime.com/artistic-black-hole-illustration-isolated-white-background-stylized-black-white-hand-drawn-illustration-black-hole-image398482984" target="_blank" style="color:var(--text-muted);">398482984</a> &copy; <a href="https://www.dreamstime.com/photogrid22_info" target="_blank" style="color:var(--text-muted);">Thiago C Silva</a> / <a href="https://www.dreamstime.com/" target="_blank" style="color:var(--text-muted);">Dreamstime.com</a></p>
+            <div class="footer-socials">
+                <a href="mailto:eps5617@psu.edu" title="Email"><i class="fas fa-envelope"></i></a>
+                <a href="https://x.com/e__shukla" target="_blank" title="X"><i class="fab fa-x-twitter"></i></a>
+                <a href="https://github.com/" target="_blank" title="GitHub"><i class="fab fa-github"></i></a>
+                <a href="https://scholar.google.com/" target="_blank" title="Google Scholar"><i class="fas fa-graduation-cap"></i></a>
+            </div>
+        </div>
+    </footer>
+
+    <!-- ===== SCRIPTS ===== -->
+    <script>
+        // Scroll-triggered fade-in
+        const observer = new IntersectionObserver(entries => {
+            entries.forEach(e => { if (e.isIntersecting) e.target.classList.add('visible'); });
+        }, { threshold: 0.1, rootMargin: '0px 0px -30px 0px' });
+        document.querySelectorAll('.fade-in').forEach(el => observer.observe(el));
+
+        // ===== Floating Side Nav: show after hero, track active section =====
+        const sideNav = document.getElementById('sideNav');
+        const heroSection = document.getElementById('home');
+        const allSections = document.querySelectorAll('section[id]');
+        const sideNavItems = document.querySelectorAll('.side-nav-item');
+
+        function updateSideNav() {
+            // Show/hide side nav based on scroll past hero
+            const heroBottom = heroSection.offsetTop + heroSection.offsetHeight;
+            sideNav.classList.toggle('visible', window.scrollY > heroBottom - 200);
+
+            // Track active section
+            let current = '';
+            allSections.forEach(s => {
+                if (window.scrollY >= s.offsetTop - 200) current = s.id;
+            });
+            sideNavItems.forEach(item => {
+                item.classList.toggle('active', item.getAttribute('data-section') === current);
+            });
+        }
+
+        window.addEventListener('scroll', updateSideNav);
+        window.addEventListener('hashchange', () => setTimeout(updateSideNav, 100));
+        // Run once on load in case the page loads scrolled down or at a hash
+        updateSideNav();
+
+        // ===== Interactive Neural Network Navigation =====
+        const nodeGroups = document.querySelectorAll('.nn-node-group');
+        const connections = document.querySelectorAll('.nn-connection');
+
+        nodeGroups.forEach(node => {
+            const section = node.getAttribute('data-section');
+
+            node.addEventListener('mouseenter', () => {
+                // Highlight connections to this node
+                connections.forEach(conn => {
+                    if (conn.getAttribute('data-node') === section) {
+                        conn.style.strokeOpacity = '0.45';
+                        conn.style.strokeWidth = '2.5';
+                        conn.style.filter = 'url(#bhBlur)';
+                    } else {
+                        conn.style.strokeOpacity = '0.04';
+                    }
+                });
+            });
+
+            node.addEventListener('mouseleave', () => {
+                // Reset all connections
+                connections.forEach(conn => {
+                    conn.style.strokeOpacity = '';
+                    conn.style.strokeWidth = '';
+                    conn.style.filter = '';
+                });
+            });
+        });
+
+        // (Black hole is now an image, no canvas needed)
+
+        // ===== Dynamic Publications from INSPIRE-HEP =====
+        (function() {
+            const pubList = document.getElementById('pubList');
+            if (!pubList) return;
+
+            // Hardcoded fallback papers (used when API is blocked, e.g. file:// protocol)
+            const fallbackPapers = [
+                {
+                    year: '2025', title: 'GR-Athena++ Simulations of Spinning Binary Black Hole Mergers',
+                    authors: '<span class="me">E. Shukla</span>, A. Rashti, R. Gamba, D. Radice, K. Chandra',
+                    journal: '', arxiv: '2510.13963', inspire: '2857221'
+                },
+                {
+                    year: '2025', title: 'Connecting GRBs from Binary Neutron Star Mergers to Nuclear Properties of Neutron Stars',
+                    authors: 'R. Perna, O. Gottlieb, <span class="me">E. Shukla</span>, D. Radice',
+                    journal: 'Physical Review D 111, 063015 (2025)', arxiv: '2412.07846',
+                    doi: '10.1103/PhysRevD.111.063015', inspire: '2857221'
+                },
+                {
+                    year: '2024', title: 'Accuracy Limitations of Existing Numerical Relativity Waveforms on the Data Analysis of Current and Future Ground-Based Detectors',
+                    authors: 'A. Rashti, R. Gamba, <span class="me">E. Shukla</span>, D. Radice, S. Bernuzzi',
+                    journal: 'Physical Review D 110, 024023 (2024)', arxiv: '2312.10241',
+                    doi: '10.1103/PhysRevD.110.024023', inspire: '2857221'
+                },
+                {
+                    year: '2023', title: 'Nonlinear Effects in Black Hole Ringdown',
+                    authors: 'M.H.-Y. Cheung, V. Baibhav, E. Berti, V. Cardoso, G. Carullo, R. Cotesta, W. Del Pozzo, F. Duque, T. Helfer, <span class="me">E. Shukla</span>, K.W.K. Wong',
+                    journal: 'Physical Review Letters 130, 081401 (2023)', arxiv: '2208.07374',
+                    doi: '10.1103/PhysRevLett.130.081401', inspire: '2857221'
+                }
+            ];
+
+            function renderPapers(papers) {
+                pubList.innerHTML = '';
+                papers.forEach(p => {
+                    const el = document.createElement('div');
+                    el.className = 'pub-item fade-in';
+                    el.innerHTML = `
+                        <span class="pub-year">${p.year}</span>
+                        <h3>${p.title}</h3>
+                        <p class="pub-authors">${p.authors}</p>
+                        ${p.journal ? `<p class="pub-journal">${p.journal}</p>` : ''}
+                        <div class="pub-links">
+                            ${p.arxiv ? `<a href="https://arxiv.org/abs/${p.arxiv}" target="_blank"><i class="fas fa-file-pdf"></i> arXiv: ${p.arxiv}</a>` : ''}
+                            ${p.doi ? `<a href="https://doi.org/${p.doi}" target="_blank"><i class="fas fa-book"></i> Journal</a>` : ''}
+                        </div>
+                    `;
+                    pubList.appendChild(el);
+                });
+            }
+
+            // Try INSPIRE API first (works on GitHub Pages), fall back to static data (works locally)
+            async function loadFromAPI() {
+                const authorResp = await fetch('https://inspirehep.net/api/authors/2857221');
+                const authorData = await authorResp.json();
+                const ids = (authorData.metadata && authorData.metadata.ids) || [];
+                const bai = ids.find(id => id.schema === 'INSPIRE BAI');
+                const baiValue = bai ? bai.value : 'E.Shukla.2';
+
+                const litResp = await fetch(`https://inspirehep.net/api/literature?sort=mostrecent&size=25&q=a+${baiValue}`);
+                const litData = await litResp.json();
+                const hits = (litData.hits && litData.hits.hits) || [];
+                if (hits.length === 0) throw new Error('No results');
+
+                return hits.map(h => {
+                    const m = h.metadata || {};
+                    const title = (m.titles && m.titles[0]) ? m.titles[0].title : 'Untitled';
+                    const year = m.earliest_date ? m.earliest_date.substring(0, 4) : '';
+                    const authors = (m.authors || []).map(a => {
+                        const parts = (a.full_name || '').split(', ');
+                        let d = a.full_name;
+                        if (parts.length === 2) d = parts[1].charAt(0) + '. ' + parts[0];
+                        const isMe = (a.full_name || '').toLowerCase().includes('shukla');
+                        return isMe ? `<span class="me">${d}</span>` : d;
+                    }).join(', ');
+                    const arxiv = (m.arxiv_eprints && m.arxiv_eprints[0]) ? m.arxiv_eprints[0].value : '';
+                    const doi = (m.dois && m.dois[0]) ? m.dois[0].value : '';
+                    let journal = '';
+                    if (m.publication_info && m.publication_info[0]) {
+                        const p = m.publication_info[0];
+                        if (p.journal_title) {
+                            journal = p.journal_title;
+                            if (p.journal_volume) journal += ' ' + p.journal_volume;
+                            if (p.artid || p.page_start) journal += ', ' + (p.artid || p.page_start);
+                            if (p.year) journal += ' (' + p.year + ')';
+                        }
+                    }
+                    return { year, title, authors, journal, arxiv, doi };
+                });
+            }
+
+            loadFromAPI()
+                .then(papers => renderPapers(papers))
+                .catch(err => {
+                    console.log('INSPIRE API unavailable, using fallback data:', err.message);
+                    renderPapers(fallbackPapers);
+                });
+        })();
+    </script>
+</body>
+</html>
