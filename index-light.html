@@ -1309,6 +1309,8 @@
                     `;
                     pubList.appendChild(el);
                 });
+                // Re-observe dynamically added fade-in elements
+                pubList.querySelectorAll('.fade-in').forEach(el => observer.observe(el));
             }
 
             // Try INSPIRE API first (works on GitHub Pages), fall back to static data (works locally)
