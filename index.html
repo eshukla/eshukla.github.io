@@ -846,8 +846,7 @@
                 gap: 2rem;
                 padding-top: 5rem;
             }
-            .nn-nav { width: 400px; height: 500px; margin: 0 auto; }
-            .bh-img { width: 280px; left: 30%; }
+            .nn-nav { display: none; }
             .nn-hint { display: none; }
             .mobile-bh-menu { display: block; }
         }
@@ -857,13 +856,9 @@
             .research-areas { grid-template-columns: 1fr; }
             section { padding: 4rem 1.25rem; }
             .footer-inner { flex-direction: column; gap: 0.75rem; }
-            .nn-nav { width: 300px; height: 380px; }
-            .bh-img { width: 200px; left: 25%; }
         }
 
         @media (max-width: 480px) {
-            .nn-nav { width: 260px; height: 340px; }
-            .bh-img { width: 160px; left: 22%; }
             .hero h1 { font-size: 2rem; }
             .hero-subtitle { font-size: 0.95rem; }
         }
@@ -942,6 +937,7 @@
                     <line x1="280" y1="320" x2="518" y2="68"  stroke="#b55a30" stroke-width="1" class="nn-connection" data-node="about"/>
                     <line x1="280" y1="330" x2="518" y2="183" stroke="#b55a30" stroke-width="1" class="nn-connection" data-node="research"/>
                     <line x1="280" y1="340" x2="518" y2="297" stroke="#b55a30" stroke-width="1" class="nn-connection" data-node="publications"/>
+                    <line x1="280" y1="350" x2="518" y2="411" stroke="#b55a30" stroke-width="1" class="nn-connection" data-node="cv"/>
                     <line x1="280" y1="360" x2="518" y2="526" stroke="#b55a30" stroke-width="1" class="nn-connection" data-node="blog"/>
                     <line x1="280" y1="370" x2="518" y2="640" stroke="#b55a30" stroke-width="1" class="nn-connection" data-node="contact"/>
                     <line x1="530" y1="68"  x2="530" y2="640" stroke="#b55a30" stroke-width="0.4" opacity="0.06"/>
@@ -968,6 +964,12 @@
                         <circle cx="530" cy="297" r="17" fill="#b55a30" opacity="0.8" class="nn-node-circle"/>
                         <circle cx="530" cy="297" r="7" fill="white" opacity="0.85"/>
                         <text x="573" y="301" class="nn-node-label">Publications</text>
+                    </a>
+                    <a href="#cv" class="nn-node-group" data-section="cv">
+                        <circle cx="530" cy="411" r="34" class="nn-node-ring" fill="#b55a30" stroke="#b55a30" stroke-width="1"/>
+                        <circle cx="530" cy="411" r="17" fill="#b55a30" opacity="0.8" class="nn-node-circle"/>
+                        <circle cx="530" cy="411" r="7" fill="white" opacity="0.85"/>
+                        <text x="573" y="415" class="nn-node-label">CV</text>
                     </a>
                     <a href="#blog" class="nn-node-group" data-section="blog">
                         <circle cx="530" cy="526" r="34" class="nn-node-ring" fill="#b55a30" stroke="#b55a30" stroke-width="1"/>
@@ -1169,6 +1171,47 @@
 
     </section>
 
+    <!-- ===== CV ===== -->
+    <section id="cv" style="position:relative; overflow:hidden;">
+        <svg class="section-art" style="bottom:-80px; right:-100px; width:500px; height:500px; opacity:0.03;" viewBox="0 0 500 500" fill="none">
+            <ellipse cx="250" cy="250" rx="220" ry="140" stroke="#1c2333" stroke-width="1" transform="rotate(-25 250 250)"/>
+            <ellipse cx="250" cy="250" rx="180" ry="110" stroke="#b55a30" stroke-width="1" transform="rotate(-25 250 250)"/>
+            <ellipse cx="250" cy="250" rx="130" ry="75" stroke="#2a7c6e" stroke-width="1.2" transform="rotate(-25 250 250)"/>
+            <ellipse cx="250" cy="250" rx="70" ry="38" stroke="#1c2333" stroke-width="1.2" transform="rotate(-25 250 250)"/>
+            <circle cx="250" cy="250" r="10" fill="#1c2333" opacity="0.2"/>
+        </svg>
+        <div class="section-inner">
+            <div class="section-header fade-in">
+                <span class="section-label">04 &mdash; Curriculum Vitae</span>
+                <h2 class="section-title">Education &amp; Experience</h2>
+                <div class="divider"></div>
+            </div>
+            <div class="timeline fade-in">
+                <div class="tl-item">
+                    <div class="tl-date">2022 &mdash; Present</div>
+                    <h3>PhD in Physics</h3>
+                    <div class="tl-org">Penn State University &middot; Department of Physics</div>
+                    <div class="tl-desc">Numerical relativity and gravitational-wave physics with <a href="https://sites.psu.edu/numrel/" target="_blank" style="color:var(--accent);">NumRel@PSU</a> (advisor <a href="https://science.psu.edu/physics/people/dur566" target="_blank" style="color:var(--accent);">Dr. David Radice</a>).</div>
+                </div>
+                <div class="tl-item">
+                    <div class="tl-date">2021 &mdash; 2022</div>
+                    <h3>Visiting Student Researcher</h3>
+                    <div class="tl-org">ICTS-TIFR, Bengaluru</div>
+                    <div class="tl-desc">Studied dynamical horizons of spinning binary black holes using SpEC, supervised by <a href="https://www.icts.res.in/people/prayush-kumar" target="_blank" style="color:var(--accent);">Dr. Prayush Kumar</a>.</div>
+                </div>
+                <div class="tl-item">
+                    <div class="tl-date">2016 &mdash; 2021</div>
+                    <h3>BS-MS Dual Degree in Physics</h3>
+                    <div class="tl-org">IISER Kolkata</div>
+                    <div class="tl-desc">Integrated five-year program with thesis research in cosmology.</div>
+                </div>
+            </div>
+            <div class="cv-download fade-in">
+                <a href="CV.pdf" class="btn btn-primary" target="_blank"><i class="fas fa-download"></i> Download Full CV</a>
+            </div>
+        </div>
+    </section>
+
     <!-- ===== BLOG ===== -->
     <section id="blog" class="alt-bg" style="position:relative; overflow:hidden;">
         <!-- Small constellation / knowledge graph -->
@@ -1197,7 +1240,7 @@
         </svg>
         <div class="section-inner">
             <div class="section-header fade-in">
-                <span class="section-label">04 &mdash; Blog</span>
+                <span class="section-label">05 &mdash; Blog</span>
                 <h2 class="section-title">Thoughts &amp; notes</h2>
                 <div class="divider"></div>
             </div>
@@ -1223,7 +1266,7 @@
         </svg>
         <div class="section-inner">
             <div class="section-header fade-in">
-                <span class="section-label">05 &mdash; Contact</span>
+                <span class="section-label">06 &mdash; Contact</span>
                 <h2 class="section-title">Get in touch</h2>
                 <div class="divider"></div>
             </div>
@@ -1275,6 +1318,10 @@
             <span class="side-nav-label">Papers</span>
             <span class="side-nav-dot"></span>
         </a>
+        <a href="#cv" class="side-nav-item" data-section="cv">
+            <span class="side-nav-label">CV</span>
+            <span class="side-nav-dot"></span>
+        </a>
         <a href="#blog" class="side-nav-item" data-section="blog">
             <span class="side-nav-label">Blog</span>
             <span class="side-nav-dot"></span>
@@ -1293,6 +1340,7 @@
             <a href="#about"><span class="nav-dot"></span> About</a>
             <a href="#research"><span class="nav-dot"></span> Research</a>
             <a href="#publications"><span class="nav-dot"></span> Publications</a>
+            <a href="#cv"><span class="nav-dot"></span> CV</a>
             <a href="#blog"><span class="nav-dot"></span> Blog</a>
             <a href="#contact"><span class="nav-dot"></span> Contact</a>
         </nav>
