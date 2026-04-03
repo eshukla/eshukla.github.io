@@ -725,6 +725,18 @@
 
         .fade-in.visible { opacity: 1; transform: translateY(0); }
 
+        /* Black hole image */
+        .bh-img {
+            position: absolute;
+            top: 50%;
+            left: 36%;
+            transform: translate(-50%, -50%);
+            width: 400px;
+            height: auto;
+            pointer-events: none;
+            opacity: 0.9;
+        }
+
         /* ===== RESPONSIVE ===== */
         @media (max-width: 900px) {
             .hero-inner {
@@ -734,6 +746,7 @@
                 padding-top: 5rem;
             }
             .nn-nav { width: 400px; height: 500px; margin: 0 auto; }
+            .bh-img { width: 280px; left: 30%; }
             .nn-hint { display: none; }
         }
 
@@ -742,7 +755,15 @@
             .research-areas { grid-template-columns: 1fr; }
             section { padding: 4rem 1.25rem; }
             .footer-inner { flex-direction: column; gap: 0.75rem; }
-            .nn-nav { width: 340px; height: 420px; }
+            .nn-nav { width: 300px; height: 380px; }
+            .bh-img { width: 200px; left: 25%; }
+        }
+
+        @media (max-width: 480px) {
+            .nn-nav { width: 260px; height: 340px; }
+            .bh-img { width: 160px; left: 22%; }
+            .hero h1 { font-size: 2rem; }
+            .hero-subtitle { font-size: 0.95rem; }
         }
     </style>
 </head>
@@ -774,7 +795,7 @@
             <div style="display:flex; flex-direction:column; align-items:center;">
             <div class="nn-nav" id="nnNav">
                 <!-- Canvas for Gargantua black hole -->
-                <img src="blackhole.png" alt="Black hole illustration" style="position:absolute; top:50%; left:36%; transform:translate(-50%,-50%); width:400px; height:auto; pointer-events:none; opacity:0.9;">
+                <img src="blackhole.png" alt="Black hole illustration" class="bh-img">
                 <svg viewBox="0 0 760 700" fill="none" xmlns="http://www.w3.org/2000/svg" style="position:relative; z-index:1;">
                     <defs>
                         <filter id="nodeGlow" x="-100%" y="-100%" width="300%" height="300%">
@@ -1003,7 +1024,44 @@
                 <div class="divider"></div>
             </div>
             <div class="pub-list" id="pubList">
-                <p style="color:var(--text-muted); text-align:center; padding:2rem;">Loading publications from INSPIRE-HEP...</p>
+                <div class="pub-item fade-in">
+                    <span class="pub-year">2025</span>
+                    <h3>GR-Athena++ Simulations of Spinning Binary Black Hole Mergers</h3>
+                    <p class="pub-authors"><span class="me">E. Shukla</span>, A. Rashti, R. Gamba, D. Radice, K. Chandra</p>
+                    <div class="pub-links">
+                        <a href="https://arxiv.org/abs/2510.13963" target="_blank"><i class="fas fa-file-pdf"></i> arXiv: 2510.13963</a>
+                    </div>
+                </div>
+                <div class="pub-item fade-in">
+                    <span class="pub-year">2025</span>
+                    <h3>Connecting GRBs from Binary Neutron Star Mergers to Nuclear Properties of Neutron Stars</h3>
+                    <p class="pub-authors">R. Perna, O. Gottlieb, <span class="me">E. Shukla</span>, D. Radice</p>
+                    <p class="pub-journal">Physical Review D 111, 063015 (2025)</p>
+                    <div class="pub-links">
+                        <a href="https://arxiv.org/abs/2412.07846" target="_blank"><i class="fas fa-file-pdf"></i> arXiv: 2412.07846</a>
+                        <a href="https://doi.org/10.1103/PhysRevD.111.063015" target="_blank"><i class="fas fa-book"></i> Journal</a>
+                    </div>
+                </div>
+                <div class="pub-item fade-in">
+                    <span class="pub-year">2024</span>
+                    <h3>Accuracy Limitations of Existing Numerical Relativity Waveforms on the Data Analysis of Current and Future Ground-Based Detectors</h3>
+                    <p class="pub-authors">A. Rashti, R. Gamba, <span class="me">E. Shukla</span>, D. Radice, S. Bernuzzi</p>
+                    <p class="pub-journal">Physical Review D 110, 024023 (2024)</p>
+                    <div class="pub-links">
+                        <a href="https://arxiv.org/abs/2312.10241" target="_blank"><i class="fas fa-file-pdf"></i> arXiv: 2312.10241</a>
+                        <a href="https://doi.org/10.1103/PhysRevD.110.024023" target="_blank"><i class="fas fa-book"></i> Journal</a>
+                    </div>
+                </div>
+                <div class="pub-item fade-in">
+                    <span class="pub-year">2023</span>
+                    <h3>Nonlinear Effects in Black Hole Ringdown</h3>
+                    <p class="pub-authors">M.H.-Y. Cheung, V. Baibhav, E. Berti, V. Cardoso, G. Carullo, R. Cotesta, W. Del Pozzo, F. Duque, T. Helfer, <span class="me">E. Shukla</span>, K.W.K. Wong</p>
+                    <p class="pub-journal">Physical Review Letters 130, 081401 (2023)</p>
+                    <div class="pub-links">
+                        <a href="https://arxiv.org/abs/2208.07374" target="_blank"><i class="fas fa-file-pdf"></i> arXiv: 2208.07374</a>
+                        <a href="https://doi.org/10.1103/PhysRevLett.130.081401" target="_blank"><i class="fas fa-book"></i> Journal</a>
+                    </div>
+                </div>
             </div>
             <p class="pub-footer">
                 Auto-updated from <a href="https://inspirehep.net/authors/2857221" target="_blank">INSPIRE-HEP</a>.
@@ -1056,8 +1114,7 @@
                 </div>
             </div>
             <div class="cv-download fade-in">
-                <a href="#" class="btn btn-primary"><i class="fas fa-download"></i> Download Full CV</a>
-                <p class="cv-note">Upload your CV as cv.pdf in the root of your GitHub repo and update this link.</p>
+                <a href="CV.pdf" class="btn btn-primary" download><i class="fas fa-download"></i> Download Full CV</a>
             </div>
         </div>
     </section>
@@ -1260,106 +1317,7 @@
 
         // (Black hole is now an image, no canvas needed)
 
-        // ===== Dynamic Publications from INSPIRE-HEP =====
-        (function() {
-            const pubList = document.getElementById('pubList');
-            if (!pubList) return;
-
-            // Hardcoded fallback papers (used when API is blocked, e.g. file:// protocol)
-            const fallbackPapers = [
-                {
-                    year: '2025', title: 'GR-Athena++ Simulations of Spinning Binary Black Hole Mergers',
-                    authors: '<span class="me">E. Shukla</span>, A. Rashti, R. Gamba, D. Radice, K. Chandra',
-                    journal: '', arxiv: '2510.13963', inspire: '2857221'
-                },
-                {
-                    year: '2025', title: 'Connecting GRBs from Binary Neutron Star Mergers to Nuclear Properties of Neutron Stars',
-                    authors: 'R. Perna, O. Gottlieb, <span class="me">E. Shukla</span>, D. Radice',
-                    journal: 'Physical Review D 111, 063015 (2025)', arxiv: '2412.07846',
-                    doi: '10.1103/PhysRevD.111.063015', inspire: '2857221'
-                },
-                {
-                    year: '2024', title: 'Accuracy Limitations of Existing Numerical Relativity Waveforms on the Data Analysis of Current and Future Ground-Based Detectors',
-                    authors: 'A. Rashti, R. Gamba, <span class="me">E. Shukla</span>, D. Radice, S. Bernuzzi',
-                    journal: 'Physical Review D 110, 024023 (2024)', arxiv: '2312.10241',
-                    doi: '10.1103/PhysRevD.110.024023', inspire: '2857221'
-                },
-                {
-                    year: '2023', title: 'Nonlinear Effects in Black Hole Ringdown',
-                    authors: 'M.H.-Y. Cheung, V. Baibhav, E. Berti, V. Cardoso, G. Carullo, R. Cotesta, W. Del Pozzo, F. Duque, T. Helfer, <span class="me">E. Shukla</span>, K.W.K. Wong',
-                    journal: 'Physical Review Letters 130, 081401 (2023)', arxiv: '2208.07374',
-                    doi: '10.1103/PhysRevLett.130.081401', inspire: '2857221'
-                }
-            ];
-
-            function renderPapers(papers) {
-                pubList.innerHTML = '';
-                papers.forEach(p => {
-                    const el = document.createElement('div');
-                    el.className = 'pub-item fade-in';
-                    el.innerHTML = `
-                        <span class="pub-year">${p.year}</span>
-                        <h3>${p.title}</h3>
-                        <p class="pub-authors">${p.authors}</p>
-                        ${p.journal ? `<p class="pub-journal">${p.journal}</p>` : ''}
-                        <div class="pub-links">
-                            ${p.arxiv ? `<a href="https://arxiv.org/abs/${p.arxiv}" target="_blank"><i class="fas fa-file-pdf"></i> arXiv: ${p.arxiv}</a>` : ''}
-                            ${p.doi ? `<a href="https://doi.org/${p.doi}" target="_blank"><i class="fas fa-book"></i> Journal</a>` : ''}
-                        </div>
-                    `;
-                    pubList.appendChild(el);
-                });
-                // Re-observe dynamically added fade-in elements
-                pubList.querySelectorAll('.fade-in').forEach(el => observer.observe(el));
-            }
-
-            // Try INSPIRE API first (works on GitHub Pages), fall back to static data (works locally)
-            async function loadFromAPI() {
-                const authorResp = await fetch('https://inspirehep.net/api/authors/2857221');
-                const authorData = await authorResp.json();
-                const ids = (authorData.metadata && authorData.metadata.ids) || [];
-                const bai = ids.find(id => id.schema === 'INSPIRE BAI');
-                const baiValue = bai ? bai.value : 'E.Shukla.2';
-
-                const litResp = await fetch(`https://inspirehep.net/api/literature?sort=mostrecent&size=25&q=a+${baiValue}`);
-                const litData = await litResp.json();
-                const hits = (litData.hits && litData.hits.hits) || [];
-                if (hits.length === 0) throw new Error('No results');
-
-                return hits.map(h => {
-                    const m = h.metadata || {};
-                    const title = (m.titles && m.titles[0]) ? m.titles[0].title : 'Untitled';
-                    const year = m.earliest_date ? m.earliest_date.substring(0, 4) : '';
-                    const authors = (m.authors || []).map(a => {
-                        const parts = (a.full_name || '').split(', ');
-                        let d = a.full_name;
-                        if (parts.length === 2) d = parts[1].charAt(0) + '. ' + parts[0];
-                        const isMe = (a.full_name || '').toLowerCase().includes('shukla');
-                        return isMe ? `<span class="me">${d}</span>` : d;
-                    }).join(', ');
-                    const arxiv = (m.arxiv_eprints && m.arxiv_eprints[0]) ? m.arxiv_eprints[0].value : '';
-                    const doi = (m.dois && m.dois[0]) ? m.dois[0].value : '';
-                    let journal = '';
-                    if (m.publication_info && m.publication_info[0]) {
-                        const p = m.publication_info[0];
-                        if (p.journal_title) {
-                            journal = p.journal_title;
-                            if (p.journal_volume) journal += ' ' + p.journal_volume;
-                            if (p.artid || p.page_start) journal += ', ' + (p.artid || p.page_start);
-                            if (p.year) journal += ' (' + p.year + ')';
-                        }
-                    }
-                    return { year, title, authors, journal, arxiv, doi };
-                });
-            }
-
-            loadFromAPI()
-                .then(papers => renderPapers(papers))
-                .catch(err => {
-                    console.log('INSPIRE API unavailable, using fallback data:', err.message);
-                    renderPapers(fallbackPapers);
-                });
-        })();
+        // Publications are rendered as static HTML - no JS needed
     </script>
 </body>
 </html>
