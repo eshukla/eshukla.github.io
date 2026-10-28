@@ -509,6 +509,76 @@
             border: 0;
         }
 
+        /* ===== TALK PHOTO SLIDESHOW ===== */
+        .talk-slideshow {
+            max-width: 520px;
+            margin: 2rem auto 0;
+        }
+
+        .talk-slides {
+            position: relative;
+            aspect-ratio: 4 / 3;
+            border-radius: var(--radius);
+            overflow: hidden;
+            border: 1px solid var(--border-light);
+        }
+
+        .talk-slide {
+            position: absolute; inset: 0;
+            opacity: 0; visibility: hidden;
+            transition: opacity var(--transition);
+            cursor: pointer;
+        }
+
+        .talk-slide.active { opacity: 1; visibility: visible; }
+
+        .talk-slide img {
+            width: 100%; height: 100%;
+            object-fit: cover;
+            display: block;
+        }
+
+        .talk-slide figcaption {
+            position: absolute; left: 0; right: 0; bottom: 0;
+            padding: 2.5rem 1.25rem 1rem;
+            background: linear-gradient(transparent, rgba(0, 0, 0, 0.8));
+            color: #fff;
+            opacity: 0; transform: translateY(10px);
+            transition: all var(--transition);
+        }
+
+        .talk-slide.show-caption figcaption { opacity: 1; transform: none; }
+
+        .talk-slide figcaption h3 { font-size: 1rem; font-weight: 600; margin-bottom: 0.2rem; }
+        .talk-slide figcaption p { font-size: 0.85rem; opacity: 0.85; }
+
+        .talk-controls {
+            display: flex; align-items: center; justify-content: space-between;
+            margin-top: 0.6rem;
+        }
+
+        .talk-hint {
+            font-size: 0.75rem;
+            font-family: var(--font-mono);
+            color: var(--text-muted);
+        }
+
+        .talk-arrow {
+            background: none;
+            border: 1px solid var(--border);
+            border-radius: 5px;
+            color: var(--text-muted);
+            padding: 0.3rem 0.7rem;
+            cursor: pointer;
+            transition: all var(--transition);
+        }
+
+        .talk-arrow:hover {
+            color: var(--accent);
+            border-color: var(--accent);
+            background: var(--accent-softer);
+        }
+
         .pub-footer {
             margin-top: 1.5rem;
             color: var(--text-muted);
@@ -1227,6 +1297,32 @@
                     </div>
                 </div>
             </div>
+
+            <div class="talk-slideshow fade-in" id="talkSlideshow">
+                <div class="talk-slides">
+                    <figure class="talk-slide active" tabindex="0">
+                        <img src="talk-strong-gravity.jpg" alt="Estuti Shukla presenting at the Strong Gravity Seminar, Penn State" loading="lazy">
+                        <figcaption>
+                            <span class="pub-year">Sept 2026</span>
+                            <h3>Strong Gravity Seminar</h3>
+                            <p>Institute for Gravitation and the Cosmos, Penn State</p>
+                        </figcaption>
+                    </figure>
+                    <figure class="talk-slide" tabindex="0">
+                        <img src="talk-aps-2025.jpg" alt="Estuti Shukla presenting at the APS Global Physics Summit 2025" loading="lazy">
+                        <figcaption>
+                            <span class="pub-year">Mar 2025</span>
+                            <h3>APS Global Physics Summit 2025</h3>
+                            <p>Anaheim, CA</p>
+                        </figcaption>
+                    </figure>
+                </div>
+                <div class="talk-controls">
+                    <button class="talk-arrow" data-dir="-1" aria-label="Previous photo"><i class="fas fa-chevron-left"></i></button>
+                    <span class="talk-hint">Click a photo for details</span>
+                    <button class="talk-arrow" data-dir="1" aria-label="Next photo"><i class="fas fa-chevron-right"></i></button>
+                </div>
+            </div>
         </div>
     </section>
 
@@ -1510,6 +1606,27 @@
                     conn.style.strokeWidth = '';
                     conn.style.filter = '';
                 });
+            });
+        });
+
+        // ===== Talk photo slideshow: arrows switch photos, click shows caption =====
+        const talkSlides = document.querySelectorAll('.talk-slide');
+        let talkIndex = 0;
+
+        function showTalkSlide(i) {
+            talkSlides[talkIndex].classList.remove('active', 'show-caption');
+            talkIndex = (i + talkSlides.length) % talkSlides.length;
+            talkSlides[talkIndex].classList.add('active');
+        }
+
+        document.querySelectorAll('.talk-arrow').forEach(btn => {
+            btn.addEventListener('click', () => showTalkSlide(talkIndex + Number(btn.dataset.dir)));
+        });
+
+        talkSlides.forEach(slide => {
+            slide.addEventListener('click', () => slide.classList.toggle('show-caption'));
+            slide.addEventListener('keydown', e => {
+                if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); slide.classList.toggle('show-caption'); }
             });
         });
 
