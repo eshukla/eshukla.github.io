@@ -496,6 +496,19 @@
             background: var(--accent-softer);
         }
 
+        .video-embed {
+            aspect-ratio: 16 / 9;
+            margin: 0.8rem 0 0.4rem;
+            border-radius: var(--radius);
+            overflow: hidden;
+        }
+
+        .video-embed iframe {
+            width: 100%;
+            height: 100%;
+            border: 0;
+        }
+
         .pub-footer {
             margin-top: 1.5rem;
             color: var(--text-muted);
@@ -932,12 +945,13 @@
                     <line x1="176" y1="230" x2="210" y2="330" stroke="#2a7c6e" stroke-width="1" opacity="0.18"/>
                     <line x1="176" y1="380" x2="210" y2="345" stroke="#2a7c6e" stroke-width="1" opacity="0.18"/>
                     <line x1="176" y1="510" x2="210" y2="360" stroke="#2a7c6e" stroke-width="1" opacity="0.18"/>
-                    <line x1="280" y1="320" x2="518" y2="68"  stroke="#b55a30" stroke-width="1" class="nn-connection" data-node="about"/>
-                    <line x1="280" y1="330" x2="518" y2="183" stroke="#b55a30" stroke-width="1" class="nn-connection" data-node="research"/>
-                    <line x1="280" y1="340" x2="518" y2="297" stroke="#b55a30" stroke-width="1" class="nn-connection" data-node="publications"/>
-                    <line x1="280" y1="350" x2="518" y2="411" stroke="#b55a30" stroke-width="1" class="nn-connection" data-node="cv"/>
-                    <line x1="280" y1="360" x2="518" y2="526" stroke="#b55a30" stroke-width="1" class="nn-connection" data-node="blog"/>
-                    <line x1="280" y1="370" x2="518" y2="640" stroke="#b55a30" stroke-width="1" class="nn-connection" data-node="contact"/>
+                    <line x1="280" y1="315" x2="518" y2="68"  stroke="#b55a30" stroke-width="1" class="nn-connection" data-node="about"/>
+                    <line x1="280" y1="325" x2="518" y2="163" stroke="#b55a30" stroke-width="1" class="nn-connection" data-node="research"/>
+                    <line x1="280" y1="335" x2="518" y2="259" stroke="#b55a30" stroke-width="1" class="nn-connection" data-node="publications"/>
+                    <line x1="280" y1="345" x2="518" y2="354" stroke="#b55a30" stroke-width="1" class="nn-connection" data-node="talks"/>
+                    <line x1="280" y1="355" x2="518" y2="449" stroke="#b55a30" stroke-width="1" class="nn-connection" data-node="cv"/>
+                    <line x1="280" y1="365" x2="518" y2="545" stroke="#b55a30" stroke-width="1" class="nn-connection" data-node="blog"/>
+                    <line x1="280" y1="375" x2="518" y2="640" stroke="#b55a30" stroke-width="1" class="nn-connection" data-node="contact"/>
                     <line x1="530" y1="68"  x2="530" y2="640" stroke="#b55a30" stroke-width="0.4" opacity="0.06"/>
                     <circle cx="55" cy="200" r="2" fill="#1c2333" opacity="0.3" class="nn-particle nn-particle-d1"/>
                     <circle cx="130" cy="310" r="2" fill="#b55a30" opacity="0.3" class="nn-particle nn-particle-d3"/>
@@ -952,28 +966,34 @@
                         <text x="573" y="72" class="nn-node-label">About</text>
                     </a>
                     <a href="#research" class="nn-node-group" data-section="research">
-                        <circle cx="530" cy="183" r="34" class="nn-node-ring" fill="#b55a30" stroke="#b55a30" stroke-width="1"/>
-                        <circle cx="530" cy="183" r="17" fill="#b55a30" opacity="0.8" class="nn-node-circle"/>
-                        <circle cx="530" cy="183" r="7" fill="white" opacity="0.85"/>
-                        <text x="573" y="187" class="nn-node-label">Research</text>
+                        <circle cx="530" cy="163" r="34" class="nn-node-ring" fill="#b55a30" stroke="#b55a30" stroke-width="1"/>
+                        <circle cx="530" cy="163" r="17" fill="#b55a30" opacity="0.8" class="nn-node-circle"/>
+                        <circle cx="530" cy="163" r="7" fill="white" opacity="0.85"/>
+                        <text x="573" y="167" class="nn-node-label">Research</text>
                     </a>
                     <a href="#publications" class="nn-node-group" data-section="publications">
-                        <circle cx="530" cy="297" r="34" class="nn-node-ring" fill="#b55a30" stroke="#b55a30" stroke-width="1"/>
-                        <circle cx="530" cy="297" r="17" fill="#b55a30" opacity="0.8" class="nn-node-circle"/>
-                        <circle cx="530" cy="297" r="7" fill="white" opacity="0.85"/>
-                        <text x="573" y="301" class="nn-node-label">Publications</text>
+                        <circle cx="530" cy="259" r="34" class="nn-node-ring" fill="#b55a30" stroke="#b55a30" stroke-width="1"/>
+                        <circle cx="530" cy="259" r="17" fill="#b55a30" opacity="0.8" class="nn-node-circle"/>
+                        <circle cx="530" cy="259" r="7" fill="white" opacity="0.85"/>
+                        <text x="573" y="263" class="nn-node-label">Publications</text>
+                    </a>
+                    <a href="#talks" class="nn-node-group" data-section="talks">
+                        <circle cx="530" cy="354" r="34" class="nn-node-ring" fill="#b55a30" stroke="#b55a30" stroke-width="1"/>
+                        <circle cx="530" cy="354" r="17" fill="#b55a30" opacity="0.8" class="nn-node-circle"/>
+                        <circle cx="530" cy="354" r="7" fill="white" opacity="0.85"/>
+                        <text x="573" y="358" class="nn-node-label">Talks</text>
                     </a>
                     <a href="#cv" class="nn-node-group" data-section="cv">
-                        <circle cx="530" cy="411" r="34" class="nn-node-ring" fill="#b55a30" stroke="#b55a30" stroke-width="1"/>
-                        <circle cx="530" cy="411" r="17" fill="#b55a30" opacity="0.8" class="nn-node-circle"/>
-                        <circle cx="530" cy="411" r="7" fill="white" opacity="0.85"/>
-                        <text x="573" y="415" class="nn-node-label">CV</text>
+                        <circle cx="530" cy="449" r="34" class="nn-node-ring" fill="#b55a30" stroke="#b55a30" stroke-width="1"/>
+                        <circle cx="530" cy="449" r="17" fill="#b55a30" opacity="0.8" class="nn-node-circle"/>
+                        <circle cx="530" cy="449" r="7" fill="white" opacity="0.85"/>
+                        <text x="573" y="453" class="nn-node-label">CV</text>
                     </a>
                     <a href="#blog" class="nn-node-group" data-section="blog">
-                        <circle cx="530" cy="526" r="34" class="nn-node-ring" fill="#b55a30" stroke="#b55a30" stroke-width="1"/>
-                        <circle cx="530" cy="526" r="17" fill="#b55a30" opacity="0.8" class="nn-node-circle"/>
-                        <circle cx="530" cy="526" r="7" fill="white" opacity="0.85"/>
-                        <text x="573" y="530" class="nn-node-label">Blog</text>
+                        <circle cx="530" cy="545" r="34" class="nn-node-ring" fill="#b55a30" stroke="#b55a30" stroke-width="1"/>
+                        <circle cx="530" cy="545" r="17" fill="#b55a30" opacity="0.8" class="nn-node-circle"/>
+                        <circle cx="530" cy="545" r="7" fill="white" opacity="0.85"/>
+                        <text x="573" y="549" class="nn-node-label">Blog</text>
                     </a>
                     <a href="#contact" class="nn-node-group" data-section="contact">
                         <circle cx="530" cy="640" r="34" class="nn-node-ring" fill="#b55a30" stroke="#b55a30" stroke-width="1"/>
@@ -1126,9 +1146,8 @@
                     <div class="pub-links">
                         <a href="" target="_blank"><i class="fas fa-file-pdf"></i> arXiv: </a>
                     </div>
-                </div>            
-            <div class="pub-list" id="pubList">
-                    <div class="pub-item fade-in">
+                </div>
+                <div class="pub-item fade-in">
                     <span class="pub-year">2026</span>
                     <h3>Puncture Evolution with Physics-Informed Neural Networks</h3>
                     <p class="pub-authors"><span class="me">E. Shukla</span>, A. Suriyanarayanan, D. Radice, R. Maulik, and S. Bernuzzi</p>
@@ -1184,10 +1203,35 @@
         </div>
     </section>
 
+    <!-- ===== TALKS ===== -->
+    <section id="talks" style="position:relative; overflow:hidden;">
+        <div class="section-inner">
+            <div class="section-header fade-in">
+                <span class="section-label">04 &mdash; Talks</span>
+                <h2 class="section-title">Talks</h2>
+                <div class="divider"></div>
+            </div>
+            <div class="pub-list">
+                <div class="pub-item fade-in">
+                    <span class="pub-year">2026</span>
+                    <h3>AstroAI Workshop 2026</h3>
+                    <p class="pub-authors">Contributed Talk &middot; June 16</p>
+                    <div class="video-embed">
+                        <iframe src="https://www.youtube-nocookie.com/embed/xCt-JwmaFxA"
+                                title="AstroAI Workshop 2026 - Estuti Shukla - Contributed Talk"
+                                allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+                                allowfullscreen loading="lazy"></iframe>
+                    </div>
+                    <div class="pub-links">
+                        <a href="https://www.youtube.com/watch?v=xCt-JwmaFxA" target="_blank"><i class="fab fa-youtube"></i> YouTube</a>
+                    </div>
+                </div>
+            </div>
+        </div>
     </section>
 
     <!-- ===== CV ===== -->
-    <section id="cv" style="position:relative; overflow:hidden;">
+    <section id="cv" class="alt-bg" style="position:relative; overflow:hidden;">
         <svg class="section-art" style="bottom:-80px; right:-100px; width:500px; height:500px; opacity:0.03;" viewBox="0 0 500 500" fill="none">
             <ellipse cx="250" cy="250" rx="220" ry="140" stroke="#1c2333" stroke-width="1" transform="rotate(-25 250 250)"/>
             <ellipse cx="250" cy="250" rx="180" ry="110" stroke="#b55a30" stroke-width="1" transform="rotate(-25 250 250)"/>
@@ -1197,7 +1241,7 @@
         </svg>
         <div class="section-inner">
             <div class="section-header fade-in">
-                <span class="section-label">04 &mdash; Curriculum Vitae</span>
+                <span class="section-label">05 &mdash; Curriculum Vitae</span>
                 <h2 class="section-title">Education &amp; Experience</h2>
                 <div class="divider"></div>
             </div>
@@ -1228,7 +1272,7 @@
     </section>
 
     <!-- ===== BLOG ===== -->
-    <section id="blog" class="alt-bg" style="position:relative; overflow:hidden;">
+    <section id="blog" style="position:relative; overflow:hidden;">
         <!-- Small constellation / knowledge graph -->
         <svg class="section-art" style="top:-30px; left:-50px; width:350px; height:350px; opacity:0.03;" viewBox="0 0 350 350" fill="none">
             <!-- Nodes -->
@@ -1255,7 +1299,7 @@
         </svg>
         <div class="section-inner">
             <div class="section-header fade-in">
-                <span class="section-label">05 &mdash; Blog</span>
+                <span class="section-label">06 &mdash; Blog</span>
                 <h2 class="section-title">Thoughts &amp; notes</h2>
                 <div class="divider"></div>
             </div>
@@ -1278,7 +1322,7 @@
     </section>
 
     <!-- ===== CONTACT ===== -->
-    <section id="contact" style="position:relative; overflow:hidden;">
+    <section id="contact" class="alt-bg" style="position:relative; overflow:hidden;">
         <!-- Gravitational wave ripples expanding outward (communication metaphor) -->
         <svg class="section-art" style="bottom:-100px; left:50%; transform:translateX(-50%); width:700px; height:350px; opacity:0.025;" viewBox="0 0 700 350" fill="none">
             <ellipse cx="350" cy="350" rx="80" ry="80" stroke="#1c2333" stroke-width="1.2"/>
@@ -1291,7 +1335,7 @@
         </svg>
         <div class="section-inner">
             <div class="section-header fade-in">
-                <span class="section-label">06 &mdash; Contact</span>
+                <span class="section-label">07 &mdash; Contact</span>
                 <h2 class="section-title">Get in touch</h2>
                 <div class="divider"></div>
             </div>
@@ -1343,6 +1387,10 @@
             <span class="side-nav-label">Papers</span>
             <span class="side-nav-dot"></span>
         </a>
+        <a href="#talks" class="side-nav-item" data-section="talks">
+            <span class="side-nav-label">Talks</span>
+            <span class="side-nav-dot"></span>
+        </a>
         <a href="#cv" class="side-nav-item" data-section="cv">
             <span class="side-nav-label">CV</span>
             <span class="side-nav-dot"></span>
@@ -1365,6 +1413,7 @@
             <a href="#about"><span class="nav-dot"></span> About</a>
             <a href="#research"><span class="nav-dot"></span> Research</a>
             <a href="#publications"><span class="nav-dot"></span> Publications</a>
+            <a href="#talks"><span class="nav-dot"></span> Talks</a>
             <a href="#cv"><span class="nav-dot"></span> CV</a>
             <a href="#blog"><span class="nav-dot"></span> Blog</a>
             <a href="#contact"><span class="nav-dot"></span> Contact</a>
